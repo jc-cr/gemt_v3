@@ -2,24 +2,36 @@
 #define gemt_interface_h
 
 #include "Arduino.h"
+//#include <ArduinoSTL.h>
 
-// Class definitions for gemt interface
-// Note: time critical stuff can benifit from inline compilitions when programed here
-/* Notes:
-  considered superior to the preprocessor #define because generalized constant
-  expressions have clearly defined type information.
+//========================================================================
+// GEMT Class Definitions 
+//========================================================================
+class GEMTmenu
+{
+  public:
+    GEMTmenu(String Menu); // Constructor
+    void addMenuItem();
+    void invokeAction();
 
-  A C++ template is a function or class that can have parameters of different types
+    //typedef std::function<void()> Func;
 
-  In the led_template class, the types and member variables present in the
-original led class have been replaced with template parameters. This remarkable
-method profoundly improves efficiency because template parameters and their
-corresponding code are entities known at compile time. Templates can improve
-efficiency and reduce potentially redundant code by providing scalability. In this
-sense, templates offer high performance and strong generic character.
-*/
+  private:
+    unsigned short int menuLength = 0;
+    unsigned short int choice;
+    String displayText;
+};
 
-//
+class GEMTinfoScreen
+{
+
+};
+
+class GEMTtestScreen
+{
+
+};
+
 const uint8_t  logo_bmp [] PROGMEM = 
  { 
   // 'logo_bmp', 115x32px
@@ -54,14 +66,4 @@ const uint8_t  logo_bmp [] PROGMEM =
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
-
-class Menu
-{
-  public:
-  Menu(void);
-
-  private:
-
-};
-
 #endif 
