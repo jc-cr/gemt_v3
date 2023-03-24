@@ -1,21 +1,26 @@
 #include "gemt_interface.h"
 
+GEMTdisplay Display;
 
 void setup(void)
 {
   delay(500);
-  Serial.begin(115200);
-  //startInterface();
+  Display.bootUp();
+  Serial.begin(115200); // DEBUGGING
 }
 
-
-int main(void)
+int main(void) 
 {
-  while(1)
+  // Must intialize the arduino firmware
+  init();
+  setup();
+
+  while(true)
   {
-    //displayMenu(CurrentMenuPtr, currentMenuLengthPtr);
+    //displayMenuDriver();
+    Display.debugScreen();
     delay(3);
   }
-
+  
   return 0;
 }
