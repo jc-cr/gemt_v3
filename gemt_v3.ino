@@ -1,12 +1,19 @@
 #include "gemt_interface.h"
+#include "nRFTest.h"
 
-GEMTdisplay Display;
+GEMTmenu MainMenu(1);
 
 void setup(void)
 {
   delay(500);
-  Display.bootUp();
-  Serial.begin(115200); // DEBUGGING
+
+  MainMenu.addItem("nRF Test", nRFtest);
+
+
+
+
+  MainMenu.bootUp();
+  //Serial.begin(115200); // DEBUGGING
 }
 
 int main(void) 
@@ -17,8 +24,7 @@ int main(void)
 
   while(true)
   {
-    //displayMenuDriver();
-    Display.debugScreen();
+    //MainMenu.run();
     delay(3);
   }
   
