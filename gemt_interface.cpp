@@ -3,6 +3,16 @@
 #define displayRowLimit 8;
 #define displayColLimit 21;
 
+namespace
+{
+  volatile uint8_t ebState = 0; // Current state (Position) of the encoder. Max by uint8 is 255
+  volatile bool clicked = false; // Updated on encoder "click" case, must reset after use 
+  uint8_t clickedItemNumber = 0;
+
+  // Note: If using jumper wires make sure pins are well spaced out.
+  // rotary encoder is super noisy and registers false clicks among other issues
+}
+
 const uint8_t  logo_bmp [] PROGMEM = 
 {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -71,6 +81,63 @@ const uint8_t  logo_bmp [] PROGMEM =
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+//========================================================================
+// Encoder Handlers (Interrupt functions)
+//========================================================================
+// On click, the global selection variable gets updated with
+// value of where it was selcted
+void onEb1Clicked(EncoderButton& eb)
+{
+  // Set selection value to current state
+  clicked = true;
+  //clickedItemNumber = CurrentMenuPtr[ebState].choice;
+}
+
+// A function to handle the 'encoder' event
+void onEb1Encoder(EncoderButton& eb) 
+{
+  /*
+  // Filter latge spikes from noise
+  if(eb.increment() > 4)
+  {
+    eb.resetPosition(eb.position()); // Reset back to startin pos
+  }
+  */
+
+  // Reset if encoder goes past active Menu limit
+  /*
+  if (abs(eb.position()) >= currentMenuLenPtr)
+  {
+    eb.resetPosition(0);
+  }
+  */
+  ebState = abs(eb.position());
+}
+
+//========================================================================
+// GEMT Base Implementations
+//========================================================================
+
+void GEMTbase::firstLine(void){}
+
+void GEMTbase::displayPrep(void)
+{
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
+}
+
+void GEMTbase::resetClicked(void)
+{
+  clicked = 0;
+}
+
+//========================================================================
+// GEMT Menu Implementations
+//========================================================================
+
+void GEMTmenu::run(void){}
+
 void GEMTmenu::bootUp(void)
 {
   // Do nothing
@@ -107,36 +174,16 @@ void GEMTmenu::bootUp(void)
     }
 }
 
-//========================================================================
-// Encoder Handlers (Interrupt functions)
-//========================================================================
-// On click, the global selection variable gets updated with
-// value of where it was selcted
-void onEb1Clicked(EncoderButton& eb)
-{
-  // Set selection value to current state
-  clicked = true;
-  //clickedItemNumber = CurrentMenuPtr[ebState].choice;
-}
+void GEMTmenu::addItem(String itemName, func selectionFunction){}
 
-// A function to handle the 'encoder' event
-void onEb1Encoder(EncoderButton& eb) 
-{
-  /*
-  // Filter latge spikes from noise
-  if(eb.increment() > 4)
-  {
-    eb.resetPosition(eb.position()); // Reset back to startin pos
-  }
-  */
 
-  // Reset if encoder goes past active Menu limit
-  /*
-  if (abs(eb.position()) >= currentMenuLenPtr)
-  {
-    eb.resetPosition(0);
-  }
-  */
-  ebState = abs(eb.position());
-}
+
+//========================================================================
+// GEMT Test Implementations
+//========================================================================
+
+void GEMTtest::showInfoScreen(void){}
+
+void GEMTtest::staticTitle(String title){}
+
 

@@ -7,10 +7,11 @@ void setup(void)
 {
   delay(500);
 
-  MainMenu.addItem("nRF Test", nRFtest);
+  // Add items to your menus here:
+  // Brings up error 
+  MainMenu.addItem("nRF Test", runNRFtest);
 
-
-
+  //...
 
   MainMenu.bootUp();
   //Serial.begin(115200); // DEBUGGING
@@ -18,13 +19,12 @@ void setup(void)
 
 int main(void) 
 {
-  // Must intialize the arduino firmware
-  init();
+  init(); // Must intialize the arduino firmware
   setup();
 
   while(true)
   {
-    //MainMenu.run();
+    MainMenu.run();
     delay(3);
   }
   
