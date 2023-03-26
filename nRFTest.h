@@ -2,6 +2,7 @@
 
 String msg = "Connect functional nRF24 module into SPI1 port\
         \nConnect nRF24 module to be tested into SPI2";
+String title = "nRF Test";
 
 GEMTtest nRFdisplay(msg);
 void nRFtest(void);
@@ -14,7 +15,8 @@ void runNRFtest(void)
   if(nRFdisplay.userSelectedOk)
   {
     // Setup display
-    nRFdisplay.staticTitle("nRF Test");
+    nRFdisplay.setFirstLine(title);
+    // Static bottom ("Done") set in class implementation
     nRFtest();
   }
 

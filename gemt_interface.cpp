@@ -118,7 +118,7 @@ void onEb1Encoder(EncoderButton& eb)
 // GEMT Base Implementations
 //========================================================================
 
-void GEMTbase::firstLine(void){}
+void GEMTbase::setFirstLine(String& title){}
 
 void GEMTbase::displayPrep(void)
 {
@@ -132,11 +132,10 @@ void GEMTbase::resetClicked(void)
   clicked = 0;
 }
 
+
 //========================================================================
 // GEMT Menu Implementations
 //========================================================================
-
-void GEMTmenu::run(void){}
 
 void GEMTmenu::bootUp(void)
 {
@@ -174,6 +173,8 @@ void GEMTmenu::bootUp(void)
     }
 }
 
+void GEMTmenu::run(void){}
+
 void GEMTmenu::addItem(String itemName, func selectionFunction){}
 
 
@@ -184,6 +185,6 @@ void GEMTmenu::addItem(String itemName, func selectionFunction){}
 
 void GEMTtest::showInfoScreen(void){}
 
-void GEMTtest::staticTitle(String title){}
+
 
 
