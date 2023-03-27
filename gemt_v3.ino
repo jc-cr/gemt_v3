@@ -5,16 +5,14 @@ GEMTmenu MainMenu(1);
 
 void setup(void)
 {
-  delay(500);
-
   // Add items to your menus here:
-  // Brings up error 
+  MainMenu.setFirstLine("GEMT Main Menu");
   MainMenu.addItem("nRF Test", runNRFtest);
 
   //...
 
   MainMenu.bootUp();
-  //Serial.begin(115200); // DEBUGGING
+  Serial.begin(115200); // DEBUGGING
 }
 
 int main(void) 
@@ -24,6 +22,7 @@ int main(void)
 
   while(true)
   {
+    //Serial.println(CurrentMenuPtr->DEBUG());
     MainMenu.run();
     delay(3);
   }

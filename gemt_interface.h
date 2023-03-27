@@ -14,6 +14,8 @@ namespace
 {
   enum encoderSWPins 
   {
+    // Note: If using jumper wires make sure pins are well spaced out.
+    // rotary encoder is super noisy and registers false clicks among other issues
     pinA = 19 , // CLK
     pinB = 2, // DT
     pinSW = 38 // SW
@@ -30,17 +32,13 @@ namespace
   Adafruit_SSD1306 display(screenWidth, screenHeight, &Wire, screenReset);
 
   EncoderButton eb1(pinA, pinB, pinSW);
-
-  // Used to set selection action
-  typedef void (*func)(void);
 }
 
-// Handle 'click' events
-void onEb1Clicked(EncoderButton& eb);
+typedef void (*func)(void);
 
-// Handle the 'encoder' event
-void onEb1Encoder(EncoderButton& eb); 
+void onEb1Encoder(EncoderButton &eb);
 
+void onEb1Clicked(EncoderButton &eb);
 
 //  Desc: Provides core helper functions to children
 class GEMTbase
@@ -49,26 +47,24 @@ class GEMTbase
     // Destructor, don't really need but good practice 
     virtual ~GEMTbase(){} 
 
-    // Set first line of any screen    
-    void setFirstLine(String& title);
-  
+    // Helper: Function to quickly call actions required to prep screen for printing
+    void displayPrep(void);
+
+    // Helper: Create function for clarity in resetting clicked
+    void resetClicked(void);
+
+    // Helper: displays first line
+    void setFirstLine(String title);
+
   protected:
     // Protected default constructor since we dont create an instance of base class
     GEMTbase(){} 
     
-    // Set to true when display booted up from a menu object
-    bool _hasBeenBootedUp = false; 
-    
-    // Function to quickly call actions required to prep screen for printing
-    void displayPrep(void);
+    // Displays first line
+    void showFirstLine(void);
 
-    // Create function for clarity in resetting clicked
-    void resetClicked(void);
-
-   
-
-  private:
-  
+    // Protected value for what first line of screen should say
+    String _firstLine; 
 };
 
 //  Desc: Class for setting up GEMT menus
@@ -77,23 +73,36 @@ class GEMTmenu : public GEMTbase
   public:
     // explicit ensures that the constructor can only be used if has input params and prevents potential unintended automatic compiler conversions
     explicit GEMTmenu(int numberOfItems) : _items(numberOfItems) {}; // the : is for initilizer list
-    
+
     // Defines boot up actions: Check hardware, set interupt handlers, show logo
     // only need to do once on main menu case
     void bootUp(void);
+
+    // Set line items of menu. Must be at least len of  instatiated value
+    void addItem(String itemName, func selectionFunction);
 
     // Sets Current Menu pointer to class executed.
     // only need to execute once for main menu implementation
     void run(void);
 
-    // Set line items of menu. Must be at least instatiated value
-    void addItem(String itemName, func selectionFunction);
-
+    int DEBUG(void)
+    {
+      return _items;
+    }
+   
   private:
+    void _setCurrentMenuPtr(void);
+
     const int _items;
-    String _itemID[6]; // Maxing out items to 10 for now
-   // Figure out how to do allocations at compile time wit _items size
+    String _itemIds[6];
+    func _selectionActions[6];
+    unsigned short int _currIndex = 0;
 };
+
+namespace
+{
+  GEMTmenu* CurrentMenuPtr = nullptr;
+}
 
 // Desc: Class to setup all screens and functions related to testing. 
 // When test terminate the return to previous Current Menu pointer

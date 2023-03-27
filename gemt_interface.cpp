@@ -1,16 +1,19 @@
 #include "gemt_interface.h"
 
-#define displayRowLimit 8;
-#define displayColLimit 21;
+#define displayRowLimit 8
+#define displayColLimit 21
 
 namespace
 {
-  volatile uint8_t ebState = 0; // Current state (Position) of the encoder. Max by uint8 is 255
-  volatile bool clicked = false; // Updated on encoder "click" case, must reset after use 
-  uint8_t clickedItemNumber = 0;
+  // Flag: Set to true when display booted up from a menu object
+  bool hasBeenBootedUp = false; 
 
-  // Note: If using jumper wires make sure pins are well spaced out.
-  // rotary encoder is super noisy and registers false clicks among other issues
+  // Current state (Position) of the encoder. Max by uint8 is 255
+  volatile uint8_t ebState = 0; 
+  // Updated on encoder "click" case, must reset after use 
+  volatile bool clicked = false; 
+  
+  uint8_t clickedItemNumber = 0;
 }
 
 const uint8_t  logo_bmp [] PROGMEM = 
@@ -81,44 +84,28 @@ const uint8_t  logo_bmp [] PROGMEM =
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+
 //========================================================================
 // Encoder Handlers (Interrupt functions)
 //========================================================================
+
 // On click, the global selection variable gets updated with
 // value of where it was selcted
-void onEb1Clicked(EncoderButton& eb)
+void onEb1Encoder(EncoderButton &eb)
+{
+  ebState = abs(eb.position());
+}
+
+void onEb1Clicked(EncoderButton &eb)
 {
   // Set selection value to current state
   clicked = true;
   //clickedItemNumber = CurrentMenuPtr[ebState].choice;
 }
 
-// A function to handle the 'encoder' event
-void onEb1Encoder(EncoderButton& eb) 
-{
-  /*
-  // Filter latge spikes from noise
-  if(eb.increment() > 4)
-  {
-    eb.resetPosition(eb.position()); // Reset back to startin pos
-  }
-  */
-
-  // Reset if encoder goes past active Menu limit
-  /*
-  if (abs(eb.position()) >= currentMenuLenPtr)
-  {
-    eb.resetPosition(0);
-  }
-  */
-  ebState = abs(eb.position());
-}
-
 //========================================================================
 // GEMT Base Implementations
 //========================================================================
-
-void GEMTbase::setFirstLine(String& title){}
 
 void GEMTbase::displayPrep(void)
 {
@@ -132,6 +119,17 @@ void GEMTbase::resetClicked(void)
   clicked = 0;
 }
 
+// wtf
+void GEMTbase::setFirstLine(String title)
+{
+  _firstLine = title;
+}
+
+void GEMTbase::showFirstLine(void)
+{
+  display.setCursor(0, 0);
+  display.println(_firstLine);
+}
 
 //========================================================================
 // GEMT Menu Implementations
@@ -140,7 +138,7 @@ void GEMTbase::resetClicked(void)
 void GEMTmenu::bootUp(void)
 {
   // Do nothing
-  if(_hasBeenBootedUp == true)
+  if(hasBeenBootedUp == true)
   {
     __asm__("nop");
   }
@@ -148,42 +146,97 @@ void GEMTmenu::bootUp(void)
   else
   {
     if(!display.begin(SSD1306_SWITCHCAPVCC, screenAddress)) 
-      {
-        display.println(F("SSD1306 allocation failed"));
-        for(;;); // Don't proceed, loop forever
-      }
-      _hasBeenBootedUp = true;
-
-        //Link the event(s) to your function
-        eb1.setClickHandler(onEb1Clicked);
-        eb1.setEncoderHandler(onEb1Encoder);
-
-        // Create mapping to selection action functions
-        //setSelectionActions();
-      
-
-        // Display logo for 2 sec
-        display.clearDisplay();
-        display.drawBitmap(0, 0, logo_bmp, screenWidth, screenHeight, WHITE);
-        display.display();
-        delay(2000);
-        
-        display.clearDisplay();  
-        display.display();
+    {
+      display.println(F("SSD1306 allocation failed"));
+      for(;;); // Don't proceed, loop forever
     }
+
+    CurrentMenuPtr = this;
+    hasBeenBootedUp = true;
+
+    // Create mapping to selection action functions
+    //setSelectionActions();
+    eb1.setEncoderHandler(onEb1Encoder);
+    eb1.setClickHandler(onEb1Clicked);
+    
+    // Display logo for 2 sec
+    display.clearDisplay();
+    display.drawBitmap(0, 0, logo_bmp, screenWidth, screenHeight, WHITE);
+    display.display();
+    delay(2000);
+    
+    display.clearDisplay();  
+    display.display();
+  }
 }
 
-void GEMTmenu::run(void){}
+void GEMTmenu::run(void)
+{/*
+  // Condition for executing users selections based on 'clicked' bool
+  if (clicked)
+  {
+    //clickedItemNumber = CurrentMenuPtr[ebState].choice;
+    //resetClicked(); // Reset before proceeding to function
+    //CurrentMenuPtr[ebState].selectionAction();
+  }
+  */
+  /*
+  //Display the previous Menu state
+  else
+  {
+    
+    */
 
-void GEMTmenu::addItem(String itemName, func selectionFunction){}
+    //DEBUG
+    Serial.println("IN RUN FUNC");
+    char buffer[50]; // init buffer to hold expected string size
+    
+    // Setup
+    eb1.update();
+    displayPrep();
+    showFirstLine();
 
+    // Display all current Menu options
+    for (size_t i = 0; i < (_items); ++i)
+    {
+      // Highlight line if user is hovering over it
+      if (ebState == i)
+      {
+        display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
+      }
+      else 
+      {
+        display.setTextColor(SSD1306_WHITE, SSD1306_BLACK); 
+      }
+      
+      // Print out in int and Text format
+      sprintf(buffer, "%s", _itemIds[i]);
 
+      Serial.println(buffer); // DEBUG
+      display.println(buffer);
+    }
+    
+    display.display();
+}
+
+// FIXME: Not being assigned correctly!
+void GEMTmenu::addItem(String itemName, func selectionFunction)
+{
+  _itemIds[_currIndex] = itemName;
+  _selectionActions[_currIndex] = selectionFunction;
+  
+  // Starts at 0, will be set to store next item if needed
+  _currIndex += 1;
+}
 
 //========================================================================
 // GEMT Test Implementations
 //========================================================================
 
-void GEMTtest::showInfoScreen(void){}
+void GEMTtest::showInfoScreen(void)
+{
+
+}
 
 
 
