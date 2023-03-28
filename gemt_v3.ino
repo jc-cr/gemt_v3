@@ -1,17 +1,20 @@
 #include "gemt_interface.h"
 #include "nRFTest.h"
 
-GEMTmenu MainMenu(1);
-static String itemID = "nRF Test";
+GEMTmenu MainMenu(2);
+
+void dummyTest (void){};
+
 void setup(void)
 {
   // Add items to your menus here:
   MainMenu.setFirstLine("GEMT Main Menu");
-  MainMenu.addItem(itemID, runNRFtest);
+  MainMenu.addItem("nRF Test", runNRFtest);
+  MainMenu.addItem("9G Servo Test", dummyTest);
 
   //...
 
-  MainMenu.bootUp();
+  MainMenu.bootUp();     // TODO: @jc figure out how to get Current Menu ptr to work again
   Serial.begin(115200); // DEBUGGING
 }
 
@@ -22,8 +25,7 @@ int main(void)
 
   while(true)
   {
-    //Serial.println(CurrentMenuPtr->DEBUG());
-    MainMenu.run();
+    startGEMT(MainMenu);
     delay(3);
   }
   

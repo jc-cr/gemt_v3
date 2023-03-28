@@ -1,10 +1,11 @@
 # gemt_v3
-OOP focused adapation of GEMT 
-
-Currently porting over V2 to header, once implemented will seperate implementation to CPP file. 
+OOP focused adapation of GEMT V2
 
 To Do:
-  -  Create nRF test example
-  - 
+  - [X] Test a Main menu
+  - [] Test selection actions
+  - [] Setup a submenu
+  - [] Setup nRF test example
+  - [] Port over all tests programs
 
 

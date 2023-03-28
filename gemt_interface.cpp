@@ -1,20 +1,18 @@
 #include "gemt_interface.h"
 
+// Flag: Set to true when display booted up from a menu object
+bool hasBeenBootedUp = false; 
+
+// Current state (Position) of the encoder. Max by uint8 is 255
+volatile uint8_t ebState = 0; 
+
+// Updated on encoder "click" case, must reset after use 
+volatile bool clicked = false; 
+
+uint8_t clickedItemNumber = 0;
+
 #define displayRowLimit 8
 #define displayColLimit 21
-
-namespace
-{
-  // Flag: Set to true when display booted up from a menu object
-  bool hasBeenBootedUp = false; 
-
-  // Current state (Position) of the encoder. Max by uint8 is 255
-  volatile uint8_t ebState = 0; 
-  // Updated on encoder "click" case, must reset after use 
-  volatile bool clicked = false; 
-  
-  uint8_t clickedItemNumber = 0;
-}
 
 const uint8_t  logo_bmp [] PROGMEM = 
 {
@@ -83,7 +81,28 @@ const uint8_t  logo_bmp [] PROGMEM =
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
+//========================================================================
+// Menu State Handlers
+//========================================================================
 
+GEMTmenu* CurrentMenuPtr = nullptr;
+
+void startGEMT(GEMTmenu& StartingMenu)
+{
+  setMenu(StartingMenu);
+}
+
+void setMenu(GEMTmenu& NextMenu)
+{
+    // Skip assignment if current already equals input
+  if (CurrentMenuPtr != &NextMenu)
+  {
+    CurrentMenuPtr = &NextMenu;
+  }
+  
+  // Runs Current Menu 
+  CurrentMenuPtr->run();
+}
 
 //========================================================================
 // Encoder Handlers (Interrupt functions)
@@ -91,21 +110,32 @@ const uint8_t  logo_bmp [] PROGMEM =
 
 // On click, the global selection variable gets updated with
 // value of where it was selcted
-void onEb1Encoder(EncoderButton &eb)
+void onEb1Encoder(EncoderButton& eb)
 {
+  // Reset if encoder goes past active Menu limit
+  // DEBUG: Set to fixed value while figuring out menu pointer setup
+  if (abs(eb.position()) >= 2)
+  {
+    eb.resetPosition(0);
+  }
+
   ebState = abs(eb.position());
+  
+  //Serial.println(ebState);
 }
 
-void onEb1Clicked(EncoderButton &eb)
+void onEb1Clicked(EncoderButton& eb)
 {
   // Set selection value to current state
   clicked = true;
+  Serial.println("CLICKED");
   //clickedItemNumber = CurrentMenuPtr[ebState].choice;
 }
 
 //========================================================================
 // GEMT Base Implementations
 //========================================================================
+
 
 void GEMTbase::displayPrep(void)
 {
@@ -135,7 +165,7 @@ void GEMTbase::showFirstLine(void)
 // GEMT Menu Implementations
 //========================================================================
 
-void GEMTmenu::bootUp(void)
+void GEMTmenu::bootUp()
 {
   // Do nothing
   if(hasBeenBootedUp == true)
@@ -151,7 +181,7 @@ void GEMTmenu::bootUp(void)
       for(;;); // Don't proceed, loop forever
     }
 
-    CurrentMenuPtr = this;
+    //MenuTracker = this;
     hasBeenBootedUp = true;
 
     // Create mapping to selection action functions
@@ -194,7 +224,7 @@ void GEMTmenu::run(void)
     showFirstLine();
 
     // Display all current Menu options
-    for (size_t i = 0; i < (_items); ++i)
+    for (size_t i = 0; i < (_numberOfMenuItems); ++i)
     {
       // Highlight line if user is hovering over it
       if (ebState == i)
@@ -207,16 +237,15 @@ void GEMTmenu::run(void)
       }
       
       // Print out in int and Text format
+      // NOTE: Need c_str() since Arduino String is not a c_string and has different delimiter
       sprintf(buffer, "%s", _itemIds[i].c_str());
 
-      Serial.println(buffer); // DEBUG
       display.println(buffer);
     }
     
     display.display();
 }
 
-// FIXME: Not being assigned correctly!
 void GEMTmenu::addItem(String itemName, func selectionFunction)
 {
   _itemIds[_currIndex] = itemName;

@@ -8,7 +8,7 @@
 #include <Adafruit_SSD1306.h>
 #include <EncoderButton.h>
 #include <Fonts/Org_01.h>
-#include "HardwareSerial.h"
+//#include "HardwareSerial.h" //  Wht we have this? -jc
 
 namespace
 {
@@ -32,13 +32,10 @@ namespace
   Adafruit_SSD1306 display(screenWidth, screenHeight, &Wire, screenReset);
 
   EncoderButton eb1(pinA, pinB, pinSW);
+
+
+  typedef void (*func)(void);
 }
-
-typedef void (*func)(void);
-
-void onEb1Encoder(EncoderButton &eb);
-
-void onEb1Clicked(EncoderButton &eb);
 
 //  Desc: Provides core helper functions to children
 class GEMTbase
@@ -72,37 +69,25 @@ class GEMTmenu : public GEMTbase
 {
   public:
     // explicit ensures that the constructor can only be used if has input params and prevents potential unintended automatic compiler conversions
-    explicit GEMTmenu(int numberOfItems) : _items(numberOfItems) {}; // the : is for initilizer list
+    explicit GEMTmenu(int numberOfItems) : _numberOfMenuItems(numberOfItems) {}; // the : is for initilizer list
 
+    // Only need to execute once.
     // Defines boot up actions: Check hardware, set interupt handlers, show logo
-    // only need to do once on main menu case
     void bootUp(void);
 
     // Set line items of menu. Must be at least len of  instatiated value
     void addItem(String itemName, func selectionFunction);
 
-    // Sets Current Menu pointer to class executed.
-    // only need to execute once for main menu implementation
     void run(void);
 
-    int DEBUG(void)
-    {
-      return _items;
-    }
-   
   private:
-    void _setCurrentMenuPtr(void);
 
-    const int _items;
+    
+    const unsigned short int _numberOfMenuItems;
     String _itemIds[6];
     func _selectionActions[6];
     unsigned short int _currIndex = 0;
 };
-
-namespace
-{
-  GEMTmenu* CurrentMenuPtr = nullptr;
-}
 
 // Desc: Class to setup all screens and functions related to testing. 
 // When test terminate the return to previous Current Menu pointer
@@ -121,5 +106,14 @@ class GEMTtest : public GEMTbase
   private:
     const String _infoMsg;
 };
+
+void startGEMT(GEMTmenu& StartingMenu);
+
+void setMenu(GEMTmenu& NextMenu);
+
+void onEb1Encoder(EncoderButton &eb);
+
+void onEb1Clicked(EncoderButton &eb);
+
 
 #endif 
