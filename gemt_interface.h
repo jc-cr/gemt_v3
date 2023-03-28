@@ -33,7 +33,6 @@ namespace
 
   EncoderButton eb1(pinA, pinB, pinSW);
 
-
   typedef void (*func)(void);
 }
 
@@ -109,7 +108,7 @@ class GEMTtest : public GEMTbase
 
 void startGEMT(GEMTmenu& StartingMenu);
 
-void setMenu(GEMTmenu& NextMenu);
+void updateMenu(GEMTmenu& NextMenu);
 
 void onEb1Encoder(EncoderButton &eb);
 

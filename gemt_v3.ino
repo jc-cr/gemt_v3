@@ -13,9 +13,8 @@ void setup(void)
   MainMenu.addItem("9G Servo Test", dummyTest);
 
   //...
-
   MainMenu.bootUp();     // TODO: @jc figure out how to get Current Menu ptr to work again
-  Serial.begin(115200); // DEBUGGING
+  //Serial.begin(115200); // DEBUGGING
 }
 
 int main(void) 

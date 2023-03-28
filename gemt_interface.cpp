@@ -89,10 +89,10 @@ GEMTmenu* CurrentMenuPtr = nullptr;
 
 void startGEMT(GEMTmenu& StartingMenu)
 {
-  setMenu(StartingMenu);
+  updateMenu(StartingMenu);
 }
 
-void setMenu(GEMTmenu& NextMenu)
+void updateMenu(GEMTmenu& NextMenu)
 {
     // Skip assignment if current already equals input
   if (CurrentMenuPtr != &NextMenu)
