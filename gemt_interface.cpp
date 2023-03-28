@@ -186,9 +186,6 @@ void GEMTmenu::run(void)
   {
     
     */
-
-    //DEBUG
-    Serial.println("IN RUN FUNC");
     char buffer[50]; // init buffer to hold expected string size
     
     // Setup
@@ -210,7 +207,7 @@ void GEMTmenu::run(void)
       }
       
       // Print out in int and Text format
-      sprintf(buffer, "%s", _itemIds[i]);
+      sprintf(buffer, "%s", _itemIds[i].c_str());
 
       Serial.println(buffer); // DEBUG
       display.println(buffer);

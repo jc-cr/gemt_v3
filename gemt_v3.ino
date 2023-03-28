@@ -2,12 +2,12 @@
 #include "nRFTest.h"
 
 GEMTmenu MainMenu(1);
-
+static String itemID = "nRF Test";
 void setup(void)
 {
   // Add items to your menus here:
   MainMenu.setFirstLine("GEMT Main Menu");
-  MainMenu.addItem("nRF Test", runNRFtest);
+  MainMenu.addItem(itemID, runNRFtest);
 
   //...
 
