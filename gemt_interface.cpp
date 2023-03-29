@@ -81,6 +81,7 @@ const uint8_t  logo_bmp [] PROGMEM =
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
+
 //========================================================================
 // Menu State Handlers
 //========================================================================
@@ -89,19 +90,18 @@ GEMTmenu* CurrentMenuPtr = nullptr;
 
 void startGEMT(GEMTmenu& StartingMenu)
 {
-  updateMenu(StartingMenu);
+   if (CurrentMenuPtr != &StartingMenu)
+  {
+      updateMenu(StartingMenu);
+  }
+
+  CurrentMenuPtr->run();
 }
 
 void updateMenu(GEMTmenu& NextMenu)
 {
     // Skip assignment if current already equals input
-  if (CurrentMenuPtr != &NextMenu)
-  {
     CurrentMenuPtr = &NextMenu;
-  }
-  
-  // Runs Current Menu 
-  CurrentMenuPtr->run();
 }
 
 //========================================================================
@@ -114,22 +114,20 @@ void onEb1Encoder(EncoderButton& eb)
 {
   // Reset if encoder goes past active Menu limit
   // DEBUG: Set to fixed value while figuring out menu pointer setup
-  if (abs(eb.position()) >= 2)
+  if (abs(eb.position()) >= (CurrentMenuPtr->numberOfMenuItems))
   {
     eb.resetPosition(0);
   }
 
   ebState = abs(eb.position());
   
-  //Serial.println(ebState);
 }
 
 void onEb1Clicked(EncoderButton& eb)
 {
   // Set selection value to current state
+  clickedItemNumber = ebState;
   clicked = true;
-  Serial.println("CLICKED");
-  //clickedItemNumber = CurrentMenuPtr[ebState].choice;
 }
 
 //========================================================================
@@ -181,11 +179,9 @@ void GEMTmenu::bootUp()
       for(;;); // Don't proceed, loop forever
     }
 
-    //MenuTracker = this;
     hasBeenBootedUp = true;
 
-    // Create mapping to selection action functions
-    //setSelectionActions();
+    // Set encode Handlers
     eb1.setEncoderHandler(onEb1Encoder);
     eb1.setClickHandler(onEb1Clicked);
     
@@ -201,21 +197,28 @@ void GEMTmenu::bootUp()
 }
 
 void GEMTmenu::run(void)
-{/*
+{
   // Condition for executing users selections based on 'clicked' bool
+  
   if (clicked)
   {
-    //clickedItemNumber = CurrentMenuPtr[ebState].choice;
-    //resetClicked(); // Reset before proceeding to function
-    //CurrentMenuPtr[ebState].selectionAction();
+    resetClicked(); // Reset before proceeding to function
+
+    (*selectionActions[0])();
+    //(*selectionActions[0])();
+
+
+    // This works:
+    // selectionActions[0] = &dummyTest;
+    //(*selectionActions[0])();
+    // ==  dummyTest()
+  
+    
   }
-  */
-  /*
+  
   //Display the previous Menu state
   else
   {
-    
-    */
     char buffer[50]; // init buffer to hold expected string size
     
     // Setup
@@ -224,7 +227,7 @@ void GEMTmenu::run(void)
     showFirstLine();
 
     // Display all current Menu options
-    for (size_t i = 0; i < (_numberOfMenuItems); ++i)
+    for (size_t i = 0; i < (numberOfMenuItems); ++i)
     {
       // Highlight line if user is hovering over it
       if (ebState == i)
@@ -244,13 +247,14 @@ void GEMTmenu::run(void)
     }
     
     display.display();
+  }
 }
 
-void GEMTmenu::addItem(String itemName, func selectionFunction)
+void GEMTmenu::addItem(String itemName, funcRef selectionFunction)
 {
   _itemIds[_currIndex] = itemName;
-  _selectionActions[_currIndex] = selectionFunction;
-  
+  selectionActions[_currIndex] = selectionFunction;
+
   // Starts at 0, will be set to store next item if needed
   _currIndex += 1;
 }
