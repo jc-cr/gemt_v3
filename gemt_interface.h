@@ -35,8 +35,6 @@ namespace
 }
 
 typedef void (*funcPtr)(void);
-typedef void (&funcRef)(void);
-
 
 
 
@@ -79,17 +77,17 @@ class GEMTmenu : public GEMTbase
     void bootUp(void);
 
     // Set line items of menu. Must be at least len of  instatiated value
-    void addItem(String itemName, funcRef selectionFunction);
+    void addItem(String itemName, funcPtr selectionFunction);
 
     void run(void);
 
     const unsigned short int numberOfMenuItems;
 
-    funcPtr selectionActions[2]; // DEBUG
-  
-  private:
     
+  private:
+    funcPtr _selectionActions[2]; // DEBUG
     String _itemIds[6];
+   
     unsigned short int _currIndex = 0;
 };
 
@@ -98,7 +96,7 @@ class GEMTmenu : public GEMTbase
 class GEMTtest : public GEMTbase
 {
   public:
-    explicit GEMTtest(String& infoText) : _infoMsg(infoText) {};
+    explicit GEMTtest(String msg) : _infoMsg(msg) {};
 
     // Each test case object will have it's own info screen to display
     void showInfoScreen(void);
@@ -108,6 +106,7 @@ class GEMTtest : public GEMTbase
   protected:
 
   private:
+    const String _storedMsgs[6];
     const String _infoMsg;
 };
 
@@ -118,6 +117,10 @@ void updateMenu(GEMTmenu& NextMenu);
 void onEb1Encoder(EncoderButton& eb);
 
 void onEb1Clicked(EncoderButton& eb);
+
+
+// DEBUG
+void dummyTest (void);
 
 
 

@@ -85,11 +85,21 @@ const uint8_t  logo_bmp [] PROGMEM =
 //========================================================================
 // Menu State Handlers
 //========================================================================
+void dummyTest (void)
+{
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
+  display.println("HI BBY");
+  display.display();
+  delay(2000);
+};
 
 GEMTmenu* CurrentMenuPtr = nullptr;
 
 void startGEMT(GEMTmenu& StartingMenu)
 {
+  // Skip assignment if current already equals input
    if (CurrentMenuPtr != &StartingMenu)
   {
       updateMenu(StartingMenu);
@@ -100,7 +110,6 @@ void startGEMT(GEMTmenu& StartingMenu)
 
 void updateMenu(GEMTmenu& NextMenu)
 {
-    // Skip assignment if current already equals input
     CurrentMenuPtr = &NextMenu;
 }
 
@@ -113,8 +122,8 @@ void updateMenu(GEMTmenu& NextMenu)
 void onEb1Encoder(EncoderButton& eb)
 {
   // Reset if encoder goes past active Menu limit
-  // DEBUG: Set to fixed value while figuring out menu pointer setup
-  if (abs(eb.position()) >= (CurrentMenuPtr->numberOfMenuItems))
+  // DEBUG: Set to mian for testing
+  if (abs(eb.position()) >= (2))
   {
     eb.resetPosition(0);
   }
@@ -163,7 +172,7 @@ void GEMTbase::showFirstLine(void)
 // GEMT Menu Implementations
 //========================================================================
 
-void GEMTmenu::bootUp()
+void GEMTmenu::bootUp(void)
 {
   // Do nothing
   if(hasBeenBootedUp == true)
@@ -196,6 +205,15 @@ void GEMTmenu::bootUp()
   }
 }
 
+void GEMTmenu::addItem(String itemName, funcPtr selectionFunction)
+{
+  _selectionActions[_currIndex] = selectionFunction;
+  _itemIds[_currIndex] = itemName;
+  
+  // Starts at 0, will be set to store next item if needed
+  _currIndex += 1;
+}
+
 void GEMTmenu::run(void)
 {
   // Condition for executing users selections based on 'clicked' bool
@@ -204,13 +222,11 @@ void GEMTmenu::run(void)
   {
     resetClicked(); // Reset before proceeding to function
 
-    (*selectionActions[0])();
-    //(*selectionActions[0])();
-
-
+    (*_selectionActions[0])(); // DEBUG
+  
     // This works:
-    // selectionActions[0] = &dummyTest;
-    //(*selectionActions[0])();
+    // selectionActions[0] = &dummyTest; Refrencing mem address of func
+    //(*selectionActions[0])(); Deref pointer to execute function
     // ==  dummyTest()
   
     
@@ -250,21 +266,28 @@ void GEMTmenu::run(void)
   }
 }
 
-void GEMTmenu::addItem(String itemName, funcRef selectionFunction)
-{
-  _itemIds[_currIndex] = itemName;
-  selectionActions[_currIndex] = selectionFunction;
-
-  // Starts at 0, will be set to store next item if needed
-  _currIndex += 1;
-}
-
 //========================================================================
 // GEMT Test Implementations
 //========================================================================
 
 void GEMTtest::showInfoScreen(void)
 {
+  /*
+  while(!clicked)
+  {
+    displayPrep();
+
+    display.println("Test Setup:");
+
+    // TODO: @jc Make a check for strings that are too long for display
+    for(int i; i < _numberOfMsgs; ++i)
+    {
+      display.println(_storedMsgs[i]);
+    }
+
+    display.display();
+  }
+  */
 
 }
 
