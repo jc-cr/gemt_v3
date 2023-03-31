@@ -37,7 +37,6 @@ namespace
 typedef void (*funcPtr)(void);
 
 
-
 //  Desc: Provides core helper functions to children
 class GEMTbase
 {
@@ -83,11 +82,9 @@ class GEMTmenu : public GEMTbase
 
     const unsigned short int numberOfMenuItems;
 
-    
   private:
-    funcPtr _selectionActions[2]; // DEBUG
+    funcPtr _selectionActions[6]; // Max 6 for now
     String _itemIds[6];
-   
     unsigned short int _currIndex = 0;
 };
 
@@ -112,16 +109,12 @@ class GEMTtest : public GEMTbase
 
 void startGEMT(GEMTmenu& StartingMenu);
 
-void updateMenu(GEMTmenu& NextMenu);
+// Extern since being used across source files
+extern void updateMenu(GEMTmenu& NextMenu);
 
 void onEb1Encoder(EncoderButton& eb);
 
 void onEb1Clicked(EncoderButton& eb);
-
-
-// DEBUG
-void dummyTest (void);
-
 
 
 #endif 

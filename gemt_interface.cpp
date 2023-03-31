@@ -1,7 +1,10 @@
 #include "gemt_interface.h"
 
+
 // Flag: Set to true when display booted up from a menu object
 bool hasBeenBootedUp = false; 
+
+bool firstMenuSet = false;
 
 // Current state (Position) of the encoder. Max by uint8 is 255
 volatile uint8_t ebState = 0; 
@@ -9,7 +12,7 @@ volatile uint8_t ebState = 0;
 // Updated on encoder "click" case, must reset after use 
 volatile bool clicked = false; 
 
-uint8_t clickedItemNumber = 0;
+volatile uint8_t clickedItemNumber = 0;
 
 #define displayRowLimit 8
 #define displayColLimit 21
@@ -85,30 +88,22 @@ const uint8_t  logo_bmp [] PROGMEM =
 //========================================================================
 // Menu State Handlers
 //========================================================================
-void dummyTest (void)
-{
-  display.clearDisplay();
-  display.setCursor(0, 0);
-  display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
-  display.println("HI BBY");
-  display.display();
-  delay(2000);
-};
 
 GEMTmenu* CurrentMenuPtr = nullptr;
 
 void startGEMT(GEMTmenu& StartingMenu)
 {
   // Skip assignment if current already equals input
-   if (CurrentMenuPtr != &StartingMenu)
+  if (!firstMenuSet)
   {
-      updateMenu(StartingMenu);
+    firstMenuSet = true;
+    updateMenu(StartingMenu);
   }
 
   CurrentMenuPtr->run();
 }
 
-void updateMenu(GEMTmenu& NextMenu)
+extern void updateMenu(GEMTmenu& NextMenu)
 {
     CurrentMenuPtr = &NextMenu;
 }
@@ -123,7 +118,7 @@ void onEb1Encoder(EncoderButton& eb)
 {
   // Reset if encoder goes past active Menu limit
   // DEBUG: Set to mian for testing
-  if (abs(eb.position()) >= (2))
+  if (abs(eb.position()) >= CurrentMenuPtr->numberOfMenuItems)
   {
     eb.resetPosition(0);
   }
@@ -135,7 +130,8 @@ void onEb1Encoder(EncoderButton& eb)
 void onEb1Clicked(EncoderButton& eb)
 {
   // Set selection value to current state
-  clickedItemNumber = ebState;
+  clickedItemNumber = ebState; // In case user turns while
+  ebState = 0; // Start at top of page
   clicked = true;
 }
 
@@ -222,7 +218,7 @@ void GEMTmenu::run(void)
   {
     resetClicked(); // Reset before proceeding to function
 
-    (*_selectionActions[0])(); // DEBUG
+    (*_selectionActions[clickedItemNumber])(); // DEBUG
   
     // This works:
     // selectionActions[0] = &dummyTest; Refrencing mem address of func
@@ -265,6 +261,7 @@ void GEMTmenu::run(void)
     display.display();
   }
 }
+
 
 //========================================================================
 // GEMT Test Implementations
