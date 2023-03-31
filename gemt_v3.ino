@@ -26,7 +26,7 @@ void setup(void)
   MainMenu.setFirstLine("GEMT Main Menu:");
   MainMenu.addItem("ESR Test", dummyTest);
   MainMenu.addItem("9G Servo Test", goToServoMenu);
-  MainMenu.addItem("nRF Test", dummyTest);
+  MainMenu.addItem("nRF Test", runNRFtest);
   MainMenu.addItem("L298N Test", dummyTest);
   MainMenu.addItem("Ultrasonic Test", dummyTest);
   

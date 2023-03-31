@@ -267,8 +267,22 @@ void GEMTmenu::run(void)
 // GEMT Test Implementations
 //========================================================================
 
+void GEMTtest::setInfoTitle(String title)
+{
+
+}
+void GEMTtest::setInfoMsgLine(String msg)
+{
+
+}
 void GEMTtest::showInfoScreen(void)
 {
+  while(!clicked)
+  {
+      eb1.update();
+      displayPrep();
+  }
+
   /*
   while(!clicked)
   {
@@ -288,6 +302,19 @@ void GEMTtest::showInfoScreen(void)
 
 }
 
+void GEMTtest::showStaticTestScreen(funcPtr moduleTest)
+{
+
+}
+void GEMTtest::showInteractiveTestScreen(funcPtr moduleTest)
+{
+
+}
+void GEMTtest::testFeedback(String msg)
+{
+  
+}
+    
 
 
 

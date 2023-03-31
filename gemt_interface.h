@@ -93,27 +93,40 @@ class GEMTmenu : public GEMTbase
 class GEMTtest : public GEMTbase
 {
   public:
-    explicit GEMTtest(String msg) : _infoMsg(msg) {};
+    explicit GEMTtest() {};
 
-    // Each test case object will have it's own info screen to display
-    void showInfoScreen(void);
+    void setInfoTitle(String title);
 
-    bool userSelectedOk = false;
+    // Desc: Sets info msgs line by line, with a cap of 6 msgs
+    // TODO: Add length handling
+    void setInfoMsgLine(String msg);
+
+    // Desc:  Test if user wishes to proceed or not.
+    //        Sets a info screen with selection options
+    bool showInfoScreen(void);
     
-  protected:
+    // Desc: Displays a screen with test title, updateble test feedback, and a "Done" selection
+    void showStaticTestScreen(funcPtr moduleTest);
 
+    // Desc: Displays a screen with test title, user updateble numbers, and a "Done" selection
+    void showInteractiveTestScreen(funcPtr moduleTest);
+
+    // Desc: Manually updateable function to display a message in center of screen
+    void testFeedback(String msg);
+    
   private:
-    const String _storedMsgs[6];
-    const String _infoMsg;
+
 };
 
+// Sets current menu pointer and drives menu functions
 void startGEMT(GEMTmenu& StartingMenu);
 
+// Desc: Used to update Current menu tracker
 // Extern since being used across source files
 extern void updateMenu(GEMTmenu& NextMenu);
 
+// Encoder handler functions
 void onEb1Encoder(EncoderButton& eb);
-
 void onEb1Clicked(EncoderButton& eb);
 
 
