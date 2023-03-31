@@ -16,12 +16,14 @@ void runNRFtest(void)
   nRFdisplay.setInfoMsgLine("nRF to test in SPI1 port");
   nRFdisplay.setInfoMsgLine("Working nRF in SPI2 port");
 
+  // If user chooses to proceed, run test
+  // Otherwise we just exit test and return to previous menu
   if (nRFdisplay.showInfoScreen())
   {
     nRFdisplay.setFirstLine("nRF Test");
     nRFdisplay.showStaticTestScreen(debug);
   }
-    
+  
 }
 
 // This is actual testing function

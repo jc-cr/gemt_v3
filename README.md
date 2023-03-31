@@ -5,8 +5,11 @@ OOP focused adapation of GEMT V2
   - [X] Test a Main menu
   - [X] Test selection actions
   - [X] Setup a submenu
-  - [] Setup nRF test example
+  - [X] Setup nRF test example
   - [] Port over all tests programs
 
 # Issues
 See issues section for current issues being resolved
+
+#Dev Notes
+  - Don't use "display" outside of scope. Will crash

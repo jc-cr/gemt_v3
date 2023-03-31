@@ -10,6 +10,7 @@
 #include <Fonts/Org_01.h>
 //#include "HardwareSerial.h" //  Wht we have this? -jc
 
+
 namespace
 {
   enum encoderSWPins 
@@ -32,6 +33,10 @@ namespace
   Adafruit_SSD1306 display(screenWidth, screenHeight, &Wire, screenReset);
 
   EncoderButton eb1(pinA, pinB, pinSW);
+
+  #define displayRowLimit 8
+  #define displayColLimit 21
+  #define maxItems 6  // 6 ensures we have free line at top and bottom of screen
 }
 
 typedef void (*funcPtr)(void);
@@ -57,11 +62,10 @@ class GEMTbase
     // Protected default constructor since we dont create an instance of base class
     GEMTbase(){} 
     
-    // Displays first line
-    void showFirstLine(void);
-
     // Protected value for what first line of screen should say
-    String _firstLine; 
+    String _firstLine;
+    unsigned short int _currIndex = 0;
+
 };
 
 //  Desc: Class for setting up GEMT menus
@@ -83,9 +87,8 @@ class GEMTmenu : public GEMTbase
     const unsigned short int numberOfMenuItems;
 
   private:
-    funcPtr _selectionActions[6]; // Max 6 for now
-    String _itemIds[6];
-    unsigned short int _currIndex = 0;
+    funcPtr _selectionActions[maxItems];
+    String _itemIds[maxItems];
 };
 
 // Desc: Class to setup all screens and functions related to testing. 
@@ -102,6 +105,7 @@ class GEMTtest : public GEMTbase
     void setInfoMsgLine(String msg);
 
     // Desc:  Test if user wishes to proceed or not.
+    //        True = Proceeed, False = Return to previous menu
     //        Sets a info screen with selection options
     bool showInfoScreen(void);
     
@@ -115,7 +119,8 @@ class GEMTtest : public GEMTbase
     void testFeedback(String msg);
     
   private:
-
+    String _infoMsgs[maxItems] = {"", "", "", "", "", "",};
+    String _infoTitle;
 };
 
 // Sets current menu pointer and drives menu functions

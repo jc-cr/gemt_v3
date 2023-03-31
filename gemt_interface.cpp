@@ -14,9 +14,6 @@ volatile bool clicked = false;
 
 volatile uint8_t clickedItemNumber = 0;
 
-#define displayRowLimit 8
-#define displayColLimit 21
-
 const uint8_t  logo_bmp [] PROGMEM = 
 {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -158,12 +155,6 @@ void GEMTbase::setFirstLine(String title)
   _firstLine = title;
 }
 
-void GEMTbase::showFirstLine(void)
-{
-  display.setCursor(0, 0);
-  display.println(_firstLine);
-}
-
 //========================================================================
 // GEMT Menu Implementations
 //========================================================================
@@ -207,7 +198,7 @@ void GEMTmenu::addItem(String itemName, funcPtr selectionFunction)
   _itemIds[_currIndex] = itemName;
   
   // Starts at 0, will be set to store next item if needed
-  _currIndex += 1;
+  ++_currIndex;
 }
 
 void GEMTmenu::run(void)
@@ -218,14 +209,12 @@ void GEMTmenu::run(void)
   {
     resetClicked(); // Reset before proceeding to function
 
-    (*_selectionActions[clickedItemNumber])(); // DEBUG
+    (*_selectionActions[clickedItemNumber])();
   
     // This works:
     // selectionActions[0] = &dummyTest; Refrencing mem address of func
     //(*selectionActions[0])(); Deref pointer to execute function
     // ==  dummyTest()
-  
-    
   }
   
   //Display the previous Menu state
@@ -236,8 +225,8 @@ void GEMTmenu::run(void)
     // Setup
     eb1.update();
     displayPrep();
-    showFirstLine();
-
+    
+    display.println(_firstLine);
     // Display all current Menu options
     for (size_t i = 0; i < (numberOfMenuItems); ++i)
     {
@@ -269,50 +258,86 @@ void GEMTmenu::run(void)
 
 void GEMTtest::setInfoTitle(String title)
 {
-
+  title = _infoTitle;
 }
 void GEMTtest::setInfoMsgLine(String msg)
 {
-
+  _infoMsgs[_currIndex] = msg;
+  ++_currIndex;
 }
-void GEMTtest::showInfoScreen(void)
+bool GEMTtest::showInfoScreen(void)
 {
+  bool proceed = false;
+
+  const String confirmOptions[3] = {"OK", "|", "Back"};
+
   while(!clicked)
   {
       eb1.update();
       displayPrep();
+
+      // Title
+      display.println(_firstLine);
+
+      // Stored msgs, will print blank if none available
+      for(int i = 0; i < maxItems; ++i)
+      {
+        display.println(_infoMsgs[i]);
+      }
+
+      // Confirm selection options
+      for (size_t i = 0; i < 3; i++)
+      {
+        // Highlight line if user is hovering over it
+        // Don't highlight the bar though
+        if (ebState == i && i != 1)
+        {
+          display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
+        }
+        else 
+        {
+          display.setTextColor(SSD1306_WHITE, SSD1306_BLACK); 
+        }
+        
+        display.print(confirmOptions[i]);
+      }
+
+      display.display();
   }
 
-  /*
-  while(!clicked)
-  {
-    displayPrep();
+    resetClicked();
 
-    display.println("Test Setup:");
-
-    // TODO: @jc Make a check for strings that are too long for display
-    for(int i; i < _numberOfMsgs; ++i)
+    // If user clicked on OK
+    if(clickedItemNumber == 0)
     {
-      display.println(_storedMsgs[i]);
+      proceed = true;
     }
 
-    display.display();
-  }
-  */
-
+    return proceed;
 }
 
 void GEMTtest::showStaticTestScreen(funcPtr moduleTest)
 {
+  while(!clicked)
+  {
+    display.println(_firstLine);
+    // ISSUE: We need to constalty update screen and also execute this fucntion
+    // also dont forget printing everything in correct spot
+    (*moduleTest)();
+    display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
+    display.println("Done");
+  }
 
 }
 void GEMTtest::showInteractiveTestScreen(funcPtr moduleTest)
 {
 
 }
+
+// Consider pausing
 void GEMTtest::testFeedback(String msg)
 {
-  
+
 }
     
 
