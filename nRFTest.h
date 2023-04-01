@@ -12,23 +12,25 @@ extern void debug(void){Serial.println("Ran test");};
 
 void runNRFtest(void)
 {
-  nRFdisplay.setInfoTitle("nRF Connections");
-  nRFdisplay.setInfoMsgLine("nRF to test in SPI1 port");
-  nRFdisplay.setInfoMsgLine("Working nRF in SPI2 port");
+  nRFdisplay.setInfoTitle("nRF Connections: ");
+  nRFdisplay.setInfoMsgLine("nRF to test in SPI1");
+  nRFdisplay.setInfoMsgLine("Working nRF in SPI2");
 
   // If user chooses to proceed, run test
   // Otherwise we just exit test and return to previous menu
   if (nRFdisplay.showInfoScreen())
   {
     nRFdisplay.setFirstLine("nRF Test");
-    nRFdisplay.showStaticTestScreen(debug);
+    nRFdisplay.showStaticTestScreen(nRFtest);
   }
-  
+
+  nRFdisplay.resetMembers();
 }
 
 // This is actual testing function
 //  The way this should work is that function just updates,
 //  GEMTtest.testFeedbakc,  message with condition/result of test
+// Note: Will manually add delay aftet setTestFeedback in order to 
 extern void nRFtest(void)
 {
   bool result;
@@ -162,5 +164,6 @@ extern void nRFtest(void)
     nRFdisplay.testFeedback("NRF TEST FAILED");
   }
 } 
+
 
 #endif

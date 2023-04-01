@@ -47,13 +47,16 @@ class GEMTbase
 {
   public:
     // Destructor, don't really need but good practice 
-    virtual ~GEMTbase(){} 
+    virtual ~GEMTbase(){};
 
     // Helper: Function to quickly call actions required to prep screen for printing
     void displayPrep(void);
 
     // Helper: Create function for clarity in resetting clicked
     void resetClicked(void);
+
+    // Desc: Need to reset index so we dont keep lines
+    virtual void resetMembers(void);
 
     // Helper: displays first line
     void setFirstLine(String title);
@@ -65,7 +68,6 @@ class GEMTbase
     // Protected value for what first line of screen should say
     String _firstLine;
     unsigned short int _currIndex = 0;
-
 };
 
 //  Desc: Class for setting up GEMT menus
@@ -96,7 +98,10 @@ class GEMTmenu : public GEMTbase
 class GEMTtest : public GEMTbase
 {
   public:
-    explicit GEMTtest() {};
+    explicit GEMTtest(){};
+
+    // Desc: Reset index and feedback display
+    virtual void resetMembers(void);
 
     void setInfoTitle(String title);
 
@@ -115,11 +120,12 @@ class GEMTtest : public GEMTbase
     // Desc: Displays a screen with test title, user updateble numbers, and a "Done" selection
     void showInteractiveTestScreen(funcPtr moduleTest);
 
-    // Desc: Manually updateable function to display a message in center of screen
+    // Desc: Will display static test feedback and test screen for 2 sec
     void testFeedback(String msg);
     
   private:
-    String _infoMsgs[maxItems] = {"", "", "", "", "", "",};
+    String _testFeedbackMsg[1] = {""};
+    String _infoMsgs[maxItems] = {"", "", "", "", "", ""};
     String _infoTitle;
 };
 

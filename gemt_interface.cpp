@@ -136,7 +136,6 @@ void onEb1Clicked(EncoderButton& eb)
 // GEMT Base Implementations
 //========================================================================
 
-
 void GEMTbase::displayPrep(void)
 {
     display.clearDisplay();
@@ -149,10 +148,15 @@ void GEMTbase::resetClicked(void)
   clicked = 0;
 }
 
-// wtf
+
 void GEMTbase::setFirstLine(String title)
 {
   _firstLine = title;
+}
+
+void GEMTbase::resetMembers(void)
+{
+  _currIndex = 0;
 }
 
 //========================================================================
@@ -251,14 +255,19 @@ void GEMTmenu::run(void)
   }
 }
 
-
 //========================================================================
 // GEMT Test Implementations
 //========================================================================
 
+void GEMTtest::resetMembers(void)
+{
+  _currIndex = 0;
+  _testFeedbackMsg[0] = {""};
+}
+
 void GEMTtest::setInfoTitle(String title)
 {
-  title = _infoTitle;
+  _infoTitle = title;
 }
 void GEMTtest::setInfoMsgLine(String msg)
 {
@@ -277,7 +286,7 @@ bool GEMTtest::showInfoScreen(void)
       displayPrep();
 
       // Title
-      display.println(_firstLine);
+      display.println(_infoTitle);
 
       // Stored msgs, will print blank if none available
       for(int i = 0; i < maxItems; ++i)
@@ -316,30 +325,45 @@ bool GEMTtest::showInfoScreen(void)
     return proceed;
 }
 
+void GEMTtest::testFeedback(String msg)
+{
+  eb1.update();
+  displayPrep();
+
+  _testFeedbackMsg[0] = msg;
+  
+  display.println(_firstLine);
+  display.println(_testFeedbackMsg[0]);
+
+  display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
+  display.println("Done");
+
+  display.display();
+  delay(2000);
+}
+
 void GEMTtest::showStaticTestScreen(funcPtr moduleTest)
 {
+  (*moduleTest)();
   while(!clicked)
   {
+    eb1.update();
+    displayPrep();
+
     display.println(_firstLine);
-    // ISSUE: We need to constalty update screen and also execute this fucntion
-    // also dont forget printing everything in correct spot
-    (*moduleTest)();
+    display.println(_testFeedbackMsg[0]);
     display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
     display.println("Done");
+    display.display();
   }
-
 }
+
 void GEMTtest::showInteractiveTestScreen(funcPtr moduleTest)
 {
 
 }
 
-// Consider pausing
-void GEMTtest::testFeedback(String msg)
-{
 
-}
-    
 
 
 

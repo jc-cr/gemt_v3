@@ -19,7 +19,6 @@ void goToMainMenu(void)
   updateMenu(MainMenu);
 }
 
-
 void setup(void)
 {
   // Add items to your menus here:
