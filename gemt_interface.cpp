@@ -7,7 +7,7 @@ bool hasBeenBootedUp = false;
 bool firstMenuSet = false;
 
 // Current state (Position) of the encoder. Max by uint8 is 255
-volatile uint8_t ebState = 0; 
+volatile int ebState = 0; 
 
 // Updated on encoder "click" case, must reset after use 
 volatile bool clicked = false; 
@@ -82,6 +82,8 @@ const uint8_t  logo_bmp [] PROGMEM =
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+int ebUpperBound = 0;
+
 //========================================================================
 // Menu State Handlers
 //========================================================================
@@ -102,7 +104,9 @@ void startGEMT(GEMTmenu& StartingMenu)
 
 extern void updateMenu(GEMTmenu& NextMenu)
 {
+  
     CurrentMenuPtr = &NextMenu;
+    ebUpperBound = CurrentMenuPtr->numberOfMenuItems;
 }
 
 //========================================================================
@@ -114,8 +118,9 @@ extern void updateMenu(GEMTmenu& NextMenu)
 void onEb1Encoder(EncoderButton& eb)
 {
   // Reset if encoder goes past active Menu limit
-  // DEBUG: Set to mian for testing
-  if (abs(eb.position()) >= (CurrentMenuPtr->numberOfMenuItems))
+  // BUG: Could cause issues to test functions if a menu only has one item
+  // TODO: Setup a global var to track rotation limit that is set whenever a certain test is intiilized...
+  if (abs(eb.position()) >= ebUpperBound)
   {
     eb.resetPosition(0);
   }
@@ -127,10 +132,10 @@ void onEb1Encoder(EncoderButton& eb)
 void onEb1Clicked(EncoderButton& eb)
 {
   // Set selection value to current state
+  clicked = true;
   clickedItemNumber = ebState; // In case user turns while
   ebState = 0; // Start at top of page
   eb.resetPosition(0);
-  clicked = true;
 }
 
 //========================================================================
@@ -244,8 +249,7 @@ void GEMTmenu::run(void)
       {
         display.setTextColor(SSD1306_WHITE, SSD1306_BLACK); 
       }
-      
-      // Print out in int and Text format
+    
       // NOTE: Need c_str() since Arduino String is not a c_string and has different delimiter
       sprintf(buffer, "%s", _itemIds[i].c_str());
 
@@ -268,22 +272,21 @@ void GEMTtest::resetMembers(void)
   {
     _testFeedbackMsgs[i] = "";
   } 
+
 }
 
-void GEMTtest::setInfoTitle(String title)
-{
-  _infoTitle = title;
-}
 void GEMTtest::setInfoMsgLine(String msg)
 {
   _infoMsgs[_currIndex] = msg;
   ++_currIndex;
 }
+
 bool GEMTtest::showInfoScreen(void)
 {
   bool proceed = false;
 
   const String confirmOptions[3] = {"OK", "|", "Back"};
+  ebUpperBound = 3;
 
   while(!clicked)
   {
@@ -291,7 +294,7 @@ bool GEMTtest::showInfoScreen(void)
       displayPrep();
 
       // Title
-      display.println(_infoTitle);
+      display.println(_firstLine);
 
       // Stored msgs, will print blank if none available
       for(int i = 0; i < maxItems; ++i)
@@ -330,7 +333,7 @@ bool GEMTtest::showInfoScreen(void)
     return proceed;
 }
 
-void GEMTtest::testFeedback(String msg)
+void GEMTtest::showStaticTestFeedback(String msg)
 {
   eb1.update();
   displayPrep();
@@ -369,10 +372,134 @@ void GEMTtest::showStaticTestScreen(funcPtr moduleTest)
   }
 }
 
-void GEMTtest::showInteractiveTestScreen(funcPtr moduleTest)
+void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, int lowerBound, int upperBound)
 {
+  // Screen click options:
+  //   0 - Set value
+  //   1 - Run
+  //   2 - Done
 
+  // TODO: set lower bound to check, right now just going off max because Im lazy...
+  ebUpperBound = 3;
+  // TODO: try changing this to String...
+  char buffer[20]; // init buffer to hold expected string size
+
+  while(true)
+  {
+    if(clicked)
+    {
+      resetClicked();
+
+      if(clickedItemNumber == 0)
+      {
+        ebUpperBound = upperBound;
+        ebState = interactiveValue[0]; // So we start at previously saved angle
+
+        // TODO: Drops back down to 0 when clicking on it again
+        display.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
+        while(!clicked)
+        {
+          interactiveValue[0] = ebState;
+
+          eb1.update();
+          displayPrep();
+
+          display.println(_firstLine);
+
+          display.setCursor(0, 12);
+          display.print(unitID);
+
+          display.setCursor(64, 12);
+          display.print(String(interactiveValue[0]));
+
+          display.setCursor(0, 56);
+          display.println("Run");
+
+          display.setCursor(64, 56);
+          display.println("Done");
+
+          display.display();
+        }
+
+        resetClicked();
+      }
+      else if (clickedItemNumber == 1)
+      {
+        (*writeFunction)(); // It'll get updated with current value
+      }
+      else if (clickedItemNumber == 2)
+      {
+        return;
+      }
+
+      ebUpperBound = 3;
+    }
+
+    String displayText[3] = {String(interactiveValue[0]), "Run", "Done"};
+
+    eb1.update();
+    displayPrep();
+
+    display.println(_firstLine);
+    
+    display.setCursor(0, 12);
+    display.print(unitID);
+
+    // Probably could do this better but the for loop lets us highlight shit, soooo
+    for (size_t i = 0; i < 3; ++i)
+    {
+      // Highlight line if user is hovering over it
+      // Dont want to highlight unit id though...
+      if (ebState == i)
+      {
+        display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
+      }
+      else 
+      {
+        display.setTextColor(SSD1306_WHITE, SSD1306_BLACK); 
+      }
+
+      // NOTE: Need c_str() since Arduino String is not a c_string and has different delimiter
+      sprintf(buffer, "%s", displayText[i].c_str());
+
+      // Positional printing:
+      if (i == 0)
+      {
+        display.setCursor(64, 12);
+        display.print(buffer);
+      }
+      else if (i == 1)
+      {
+        display.setCursor(0, 56);
+        display.print(buffer);
+      }
+      else if (i == 2)
+      {
+        display.setCursor(64, 56);
+        display.print(buffer);
+      }   
+    }
+
+    display.display();
+  }
+  
 }
+
+
+void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, int lowerBound, int upperBound, String feedbackMsg)
+{
+  
+}
+
+// Display section showing 
+// TODO: will need to overide encoder turn limit
+//    could make bounds global? 
+void GEMTtest::updateIntereactiveValue(void)
+{ 
+  
+}
+
+
 
 
 

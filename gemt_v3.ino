@@ -1,5 +1,6 @@
 #include "gemt_interface.h"
 #include "nRFTest.h"
+#include "9gServoTest.h"
 
 GEMTmenu MainMenu(5);
 GEMTmenu ServoMenu(3);
@@ -30,7 +31,7 @@ void setup(void)
   MainMenu.addItem("Ultrasonic Test", dummyTest);
   
   ServoMenu.setFirstLine("9G Servo Submenu: ");
-  ServoMenu.addItem("Manual Servo Test", dummyTest);
+  ServoMenu.addItem("Manual Servo Test", runServoManualTest);
   ServoMenu.addItem("Auto Servo Test", dummyTest);
   ServoMenu.addItem("Back", goToMainMenu);
 
@@ -46,11 +47,13 @@ int main(void)
   init(); // Must intialize the arduino firmware
   setup();
 
+  // This the loop arduino fucntion
   while(true)
   {
     startGEMT(MainMenu);
     delay(3);
   }
+
   
   return 0;
 }

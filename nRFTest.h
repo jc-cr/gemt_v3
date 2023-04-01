@@ -8,11 +8,9 @@ GEMTtest nRFdisplay;
 
 extern void nRFtest(void);
 
-extern void debug(void){Serial.println("Ran test");};
-
 void runNRFtest(void)
 {
-  nRFdisplay.setInfoTitle("nRF Connections: ");
+  nRFdisplay.setFirstLine("nRF Connections: ");
   nRFdisplay.setInfoMsgLine("nRF to test in SPI1");
   nRFdisplay.setInfoMsgLine("Working nRF in SPI2");
 
@@ -20,7 +18,7 @@ void runNRFtest(void)
   // Otherwise we just exit test and return to previous menu
   if (nRFdisplay.showInfoScreen())
   {
-    nRFdisplay.setFirstLine("nRF Test");
+    nRFdisplay.setFirstLine("nRF Test: ");
     nRFdisplay.showStaticTestScreen(nRFtest);
   }
 
@@ -44,7 +42,7 @@ extern void nRFtest(void)
   const byte address[6] = "00002";
   
  
-  nRFdisplay.testFeedback("nRF24 Test started...");
+  nRFdisplay.showStaticTestFeedback("nRF24 Test started...");
 
   // Test connections, display feedback
   if (spi2.isChipConnected() == 1 && spi1.isChipConnected() == 1) 
@@ -90,8 +88,8 @@ extern void nRFtest(void)
     // If first test passed, continue to next test
     if (result == 1)
     {
-      nRFdisplay.testFeedback("SPI2 TX Passed... ");
-      nRFdisplay.testFeedback("Starting RX test!");
+      nRFdisplay.showStaticTestFeedback("SPI2 TX Passed... ");
+      nRFdisplay.showStaticTestFeedback("Starting RX test!");
       
       // TEST 2: SPI2 RX
       //----------------------------------------------
@@ -134,19 +132,19 @@ extern void nRFtest(void)
   
   else if (spi2.isChipConnected() == 1 && spi1.isChipConnected() == 0) 
   {
-    nRFdisplay.testFeedback("SPI1 not detected!");
+    nRFdisplay.showStaticTestFeedback("SPI1 not detected!");
     result = 0;
   }
   
   else if ( spi2.isChipConnected() == 0 && spi1.isChipConnected() == 1)
   {
-    nRFdisplay.testFeedback("SPI2 not detected!");
+    nRFdisplay.showStaticTestFeedback("SPI2 not detected!");
     result = 0;
   }
   
   else 
   {
-    nRFdisplay.testFeedback("SPI1, SPI2 not detected!");
+    nRFdisplay.showStaticTestFeedback("SPI1, SPI2 not detected!");
     result = 0;
   }
 
@@ -154,11 +152,11 @@ extern void nRFtest(void)
   // Return final results
   if (result == 1)
   {
-    nRFdisplay.testFeedback("NRF TEST PASSED");
+    nRFdisplay.showStaticTestFeedback("NRF TEST PASSED");
   }
   else
   {
-    nRFdisplay.testFeedback("NRF TEST FAILED");
+    nRFdisplay.showStaticTestFeedback("NRF TEST FAILED");
   }
 } 
 

@@ -103,8 +103,6 @@ class GEMTtest : public GEMTbase
     // Desc: Reset index and feedback display
     virtual void resetMembers(void);
 
-    void setInfoTitle(String title);
-
     // Desc: Sets info msgs line by line, with a cap of 6 msgs
     // TODO: Add length handling
     void setInfoMsgLine(String msg);
@@ -114,19 +112,26 @@ class GEMTtest : public GEMTbase
     //        Sets a info screen with selection options
     bool showInfoScreen(void);
     
-    // Desc: Displays a screen with test title, updateble test feedback, and a "Done" selection
+    // Desc: Displays a screen with test title, updateble test feedback line, and a "Done" selection
     void showStaticTestScreen(funcPtr moduleTest);
 
-    // Desc: Displays a screen with test title, user updateble numbers, and a "Done" selection
-    void showInteractiveTestScreen(funcPtr moduleTest);
-
     // Desc: Will display static test feedback and test screen for 2 sec
-    void testFeedback(String msg);
-    
+    void showStaticTestFeedback(String msg);
+
+    // Desc: Displays a screen with test title, user updateble numbers line, "Run" selec, and  "Done" selec
+    void showInteractiveTestScreen(funcPtr writeFunction, String unitID, int lowerBound, int upperBound);
+
+    // Desc: Displays a screen with test title, user updateble numbers line , result feedback line, "Run" selec, and  "Done" selec
+    void showInteractiveTestScreen(funcPtr writeFunction, String unitID, int lowerBound, int upperBound, String feedbackMsg);
+
+    void updateIntereactiveValue(void);
+    int interactiveValue[1] = {0}; 
+  
   private:
+    // Intiliaze these two arrays with empty strings for printing
     String _testFeedbackMsgs[maxItems] = {"", "", "", "", "", ""};
     String _infoMsgs[maxItems] = {"", "", "", "", "", ""};
-    String _infoTitle;
+    
 };
 
 // Sets current menu pointer and drives menu functions
