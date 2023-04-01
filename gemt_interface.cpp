@@ -115,7 +115,7 @@ void onEb1Encoder(EncoderButton& eb)
 {
   // Reset if encoder goes past active Menu limit
   // DEBUG: Set to mian for testing
-  if (abs(eb.position()) >= CurrentMenuPtr->numberOfMenuItems)
+  if (abs(eb.position()) >= (CurrentMenuPtr->numberOfMenuItems))
   {
     eb.resetPosition(0);
   }
@@ -129,6 +129,7 @@ void onEb1Clicked(EncoderButton& eb)
   // Set selection value to current state
   clickedItemNumber = ebState; // In case user turns while
   ebState = 0; // Start at top of page
+  eb.resetPosition(0);
   clicked = true;
 }
 
@@ -262,6 +263,7 @@ void GEMTmenu::run(void)
 void GEMTtest::resetMembers(void)
 {
   _currIndex = 0;
+
   for(int i = 0; i < maxItems; ++i)
   {
     _testFeedbackMsgs[i] = "";

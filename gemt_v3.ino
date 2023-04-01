@@ -22,14 +22,14 @@ void goToMainMenu(void)
 void setup(void)
 {
   // Add items to your menus here:
-  MainMenu.setFirstLine("GEMT Main Menu:");
+  MainMenu.setFirstLine("GEMT Main Menu: ");
   MainMenu.addItem("ESR Test", dummyTest);
   MainMenu.addItem("9G Servo Test", goToServoMenu);
   MainMenu.addItem("nRF Test", runNRFtest);
   MainMenu.addItem("L298N Test", dummyTest);
   MainMenu.addItem("Ultrasonic Test", dummyTest);
   
-  ServoMenu.setFirstLine("9G Servo Submenu");
+  ServoMenu.setFirstLine("9G Servo Submenu: ");
   ServoMenu.addItem("Manual Servo Test", dummyTest);
   ServoMenu.addItem("Auto Servo Test", dummyTest);
   ServoMenu.addItem("Back", goToMainMenu);

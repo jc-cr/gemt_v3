@@ -28,9 +28,6 @@ void runNRFtest(void)
 }
 
 // This is actual testing function
-//  The way this should work is that function just updates,
-//  GEMTtest.testFeedbakc,  message with condition/result of test
-// Note: Will manually add delay aftet setTestFeedback in order to 
 extern void nRFtest(void)
 {
   bool result;
