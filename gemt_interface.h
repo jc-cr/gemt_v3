@@ -124,7 +124,7 @@ class GEMTtest : public GEMTbase
     void testFeedback(String msg);
     
   private:
-    String _testFeedbackMsg[1] = {""};
+    String _testFeedbackMsgs[maxItems] = {"", "", "", "", "", ""};
     String _infoMsgs[maxItems] = {"", "", "", "", "", ""};
     String _infoTitle;
 };

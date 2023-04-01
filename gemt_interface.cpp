@@ -262,7 +262,10 @@ void GEMTmenu::run(void)
 void GEMTtest::resetMembers(void)
 {
   _currIndex = 0;
-  _testFeedbackMsg[0] = {""};
+  for(int i = 0; i < maxItems; ++i)
+  {
+    _testFeedbackMsgs[i] = "";
+  } 
 }
 
 void GEMTtest::setInfoTitle(String title)
@@ -330,10 +333,13 @@ void GEMTtest::testFeedback(String msg)
   eb1.update();
   displayPrep();
 
-  _testFeedbackMsg[0] = msg;
+  _testFeedbackMsgs[0] = msg;
   
   display.println(_firstLine);
-  display.println(_testFeedbackMsg[0]);
+  for(int i = 0; i < maxItems; ++i)
+  {
+    display.println(_testFeedbackMsgs[i]);
+  }
 
   display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
   display.println("Done");
@@ -351,7 +357,10 @@ void GEMTtest::showStaticTestScreen(funcPtr moduleTest)
     displayPrep();
 
     display.println(_firstLine);
-    display.println(_testFeedbackMsg[0]);
+    for(int i = 0; i < maxItems; ++i)
+    {
+      display.println(_testFeedbackMsgs[i]);
+    }
     display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
     display.println("Done");
     display.display();
