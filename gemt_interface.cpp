@@ -106,7 +106,6 @@ extern void updateMenu(GEMTmenu& NextMenu)
 {
   
     CurrentMenuPtr = &NextMenu;
-    ebUpperBound = CurrentMenuPtr->numberOfMenuItems;
 }
 
 //========================================================================
@@ -214,6 +213,7 @@ void GEMTmenu::addItem(String itemName, funcPtr selectionFunction)
 void GEMTmenu::run(void)
 {
   // Condition for executing users selections based on 'clicked' bool
+  ebUpperBound = CurrentMenuPtr->numberOfMenuItems;
   
   if (clicked)
   {

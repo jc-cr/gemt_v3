@@ -11,5 +11,5 @@ OOP focused adapation of GEMT V2
 # Issues
 See issues section for current issues being resolved
 
-#Dev Notes
+# Dev Notes
   - Don't use "display" outside of scope. Will crash
