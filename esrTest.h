@@ -78,9 +78,9 @@ extern void esrTest(void)
     esrVal = esrVal * 1000; //esrval in mOhms
     esrVal = esrVal - 286.77;
     String msg = String("ESR: ") + String(esrVal,2) + String(" mOhms");
-    esrDisplay.showStaticTestFeedback(msg);
+    esrDisplay.setStaticTestFeedbackLine(msg);
+    esrDisplay.showStaticTestFeedback();
   }
-  return;
 }
 
 unsigned long measureESR(void)
@@ -129,4 +129,5 @@ long readVcc(void) {
   result = 1125300L / result; // Calculate Vcc (in mV); 1125300 = 1.1*1023*1000
   return result; // Vcc in millivolts
 }
+
 #endif

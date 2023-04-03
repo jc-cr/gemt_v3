@@ -114,8 +114,11 @@ class GEMTtest : public GEMTbase
     // Desc: Displays a screen with test title, updateble test feedback line, and a "Done" selection
     void showStaticTestScreen(funcPtr moduleTest);
 
-    // Desc: Will display static test feedback and test screen for 2 sec
-    void showStaticTestFeedback(String msg);
+    // Desc: Can set up to 6 short msgs
+    void setStaticTestFeedbackLine(String msg);
+
+    // Desc: Will display static test feedback msgs after set
+    void showStaticTestFeedback(void);
 
     // Desc: Displays a screen with test title, user updateble numbers line, "Run" selec, and  "Done" selec
     void showInteractiveTestScreen(funcPtr writeFunction, String unitID, int lowerBound, int upperBound);
@@ -135,7 +138,6 @@ class GEMTtest : public GEMTbase
     // Intiliaze these two arrays with empty strings for printing
     String _testFeedbackMsgs[maxItems] = {"", "", "", "", "", ""};
     String _infoMsgs[maxItems] = {"", "", "", "", "", ""};
-    
 };
 
 // Sets current menu pointer and drives menu functions

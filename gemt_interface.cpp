@@ -289,6 +289,7 @@ void GEMTtest::_resetMembers(void)
 
   for(int i = 0; i < maxItems; ++i)
   {
+    _infoMsgs[i] = "";
     _testFeedbackMsgs[i] = "";
   } 
 
@@ -363,13 +364,17 @@ bool GEMTtest::showInfoScreen(void)
   return proceed;
 }
 
-void GEMTtest::showStaticTestFeedback(String msg)
+void GEMTtest::setStaticTestFeedbackLine(String msg)
+{
+  _testFeedbackMsgs[_currIndex] = msg;
+  ++_currIndex;
+}
+
+void GEMTtest::showStaticTestFeedback(void)
 {
   eb1.update();
   displayPrep();
 
-  _testFeedbackMsgs[0] = msg;
-  
   display.println(_firstLine);
   for(int i = 0; i < maxItems; ++i)
   {
@@ -383,6 +388,8 @@ void GEMTtest::showStaticTestFeedback(String msg)
 
   display.display();
   // We dont want to reset clicked in this case, that ways it carries over to showStaticTestScreen
+
+  _currIndex = 0;
 }
 
 void GEMTtest::showStaticTestScreen(funcPtr moduleTest)

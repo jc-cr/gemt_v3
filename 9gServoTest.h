@@ -67,7 +67,8 @@ extern void autoServoTest(void)
 
   int angle = 0;
 
-  servoDisplay.showStaticTestFeedback("Servo will now rotate to 180 degrees in 45 degree increments");
+  servoDisplay.setStaticTestFeedbackLine("Servo will now rotate to 180 degrees in 45 degree increments");
+  servoDisplay.showStaticTestFeedback();
   delay(2000);
   
   for (int i = 0; i <= 4; ++i)
@@ -75,7 +76,8 @@ extern void autoServoTest(void)
     angle = (45 * i);
     String msg = String("Angle: ") + String(angle);
     servo.write(angle);
-    servoDisplay.showStaticTestFeedback(msg);
+    servoDisplay.setStaticTestFeedbackLine(msg);
+    servoDisplay.showStaticTestFeedback();
     delay(2000); // Extra delay to allow servo to reach pos
   }
   for (int i = 0; i <= 4; ++i)
@@ -83,7 +85,8 @@ extern void autoServoTest(void)
     angle = (180 - (45 * i));
     String msg = String("Angle: ") + String(angle);
     servo.write(angle);
-    servoDisplay.showStaticTestFeedback(msg);
+    servoDisplay.setStaticTestFeedbackLine(msg);
+    servoDisplay.showStaticTestFeedback();
     delay(2000); // Extra delay to allow servo to reach pos 
   }
 

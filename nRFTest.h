@@ -27,7 +27,7 @@ void runNRFtest(void)
 // This is actual testing function
 extern void nRFtest(void)
 {
-  bool result;
+  bool result = false;
   
   //create an RF24 object
   // Testing done on SPI2 port input
@@ -41,7 +41,9 @@ extern void nRFtest(void)
   const byte address[6] = "00002";
   
  
-  nRFdisplay.showStaticTestFeedback("nRF24 Test started...");
+  nRFdisplay.setStaticTestFeedbackLine("nRF24 Test started...");
+  nRFdisplay.showStaticTestFeedback();
+
   delay(1500); // Add delays to make results readable
 
   // Test connections, display feedback
@@ -88,8 +90,9 @@ extern void nRFtest(void)
     // If first test passed, continue to next test
     if (result == 1)
     {
-      nRFdisplay.showStaticTestFeedback("SPI2 TX Passed... ");
-      nRFdisplay.showStaticTestFeedback("Starting RX test!");
+      nRFdisplay.setStaticTestFeedbackLine("SPI2 TX Passed... ");
+      nRFdisplay.setStaticTestFeedbackLine("Starting RX test!");
+      nRFdisplay.showStaticTestFeedback();
       
       // TEST 2: SPI2 RX
       //----------------------------------------------
@@ -132,35 +135,39 @@ extern void nRFtest(void)
   
   else if (spi2.isChipConnected() == 1 && spi1.isChipConnected() == 0) 
   {
-    nRFdisplay.showStaticTestFeedback("SPI1 not detected!");
+    nRFdisplay.setStaticTestFeedbackLine("SPI1 not detected!");
+    nRFdisplay.showStaticTestFeedback();
     delay(1500);
-    result = 0;
   }
   
   else if ( spi2.isChipConnected() == 0 && spi1.isChipConnected() == 1)
   {
-    nRFdisplay.showStaticTestFeedback("SPI2 not detected!");
+    nRFdisplay.setStaticTestFeedbackLine("SPI2 not detected!");
+    nRFdisplay.showStaticTestFeedback();
     delay(1500);
     result = 0;
   }
   
   else 
   {
-    nRFdisplay.showStaticTestFeedback("SPI1, SPI2 not detected!");
+    nRFdisplay.setStaticTestFeedbackLine("SPI1, SPI2 not detected!");
+    nRFdisplay.showStaticTestFeedback();
     delay(1500);
     result = 0;
   }
 
 
   // Return final results
-  if (result == 1)
+  if (result == true)
   {
-    nRFdisplay.showStaticTestFeedback("NRF TEST PASSED");
+    nRFdisplay.setStaticTestFeedbackLine("NRF TEST PASSED");
+    nRFdisplay.showStaticTestFeedback();
     delay(1500);
   }
   else
   {
-    nRFdisplay.showStaticTestFeedback("NRF TEST FAILED");
+    nRFdisplay.setStaticTestFeedbackLine("NRF TEST FAILED");
+    nRFdisplay.showStaticTestFeedback();
     delay(1500);
   }
 
