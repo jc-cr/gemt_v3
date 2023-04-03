@@ -22,10 +22,6 @@ void runNRFtest(void)
     nRFdisplay.setFirstLine("nRF Test: ");
     nRFdisplay.showStaticTestScreen(nRFtest);
   }
-
-  // Must reset memebers to repeat printing of information
-  // TODO: Setup automatic clearing 
-  nRFdisplay.resetMembers();
 }
 
 // This is actual testing function
@@ -46,6 +42,7 @@ extern void nRFtest(void)
   
  
   nRFdisplay.showStaticTestFeedback("nRF24 Test started...");
+  delay(1500); // Add delays to make results readable
 
   // Test connections, display feedback
   if (spi2.isChipConnected() == 1 && spi1.isChipConnected() == 1) 
@@ -136,18 +133,21 @@ extern void nRFtest(void)
   else if (spi2.isChipConnected() == 1 && spi1.isChipConnected() == 0) 
   {
     nRFdisplay.showStaticTestFeedback("SPI1 not detected!");
+    delay(1500);
     result = 0;
   }
   
   else if ( spi2.isChipConnected() == 0 && spi1.isChipConnected() == 1)
   {
     nRFdisplay.showStaticTestFeedback("SPI2 not detected!");
+    delay(1500);
     result = 0;
   }
   
   else 
   {
     nRFdisplay.showStaticTestFeedback("SPI1, SPI2 not detected!");
+    delay(1500);
     result = 0;
   }
 
@@ -156,11 +156,15 @@ extern void nRFtest(void)
   if (result == 1)
   {
     nRFdisplay.showStaticTestFeedback("NRF TEST PASSED");
+    delay(1500);
   }
   else
   {
     nRFdisplay.showStaticTestFeedback("NRF TEST FAILED");
+    delay(1500);
   }
+
+  nRFdisplay.testingComplete = true;
 } 
 
 

@@ -102,9 +102,6 @@ class GEMTtest : public GEMTbase
   public:
     explicit GEMTtest(){};
 
-    // Desc: Reset index and feedback display
-    virtual void resetMembers(void);
-
     // Desc: Sets info msgs line by line, with a cap of 6 msgs
     // TODO: Add length handling
     void setInfoMsgLine(String msg);
@@ -128,8 +125,13 @@ class GEMTtest : public GEMTbase
 
     void updateIntereactiveValue(void);
     int interactiveValue[1] = {0}; 
+
+    bool testingComplete = false;
   
   private:
+    // Desc: Reset index and feedback display
+    virtual void _resetMembers(void);
+
     // Intiliaze these two arrays with empty strings for printing
     String _testFeedbackMsgs[maxItems] = {"", "", "", "", "", ""};
     String _infoMsgs[maxItems] = {"", "", "", "", "", ""};

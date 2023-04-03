@@ -19,6 +19,7 @@ volatile bool clicked = false;
 // Used to store the clicked value in case user turns encoder before value was processed
 volatile uint8_t clickedItemNumber = 0;
 
+
 // GEMT logo
 const uint8_t  logo_bmp [] PROGMEM = 
 {
@@ -136,8 +137,9 @@ void onEb1Clicked(EncoderButton& eb)
   // Set selection value to current state
   clicked = true;
   clickedItemNumber = ebState; // In case user turns while
-  eb.resetPosition(0); // Start at top of page
+  
   ebState = 0; 
+  eb.resetPosition(0); // Start at top of page
 }
 
 //========================================================================
@@ -206,6 +208,8 @@ void GEMTmenu::bootUp(void)
     eb1.setEncoderHandler(onEb1Encoder);
     eb1.setClickHandler(onEb1Clicked);
     
+    //attachInterrupt(digitalPinToInterrupt(19), onEb1Clicked, RISING);
+
     // Display logo for 2 sec
     display.clearDisplay();
     display.drawBitmap(0, 0, logo_bmp, screenWidth, screenHeight, WHITE);
@@ -278,8 +282,9 @@ void GEMTmenu::run(void)
 // GEMT Test Implementations
 //========================================================================
 
-void GEMTtest::resetMembers(void)
+void GEMTtest::_resetMembers(void)
 {
+  testingComplete = false;
   _currIndex = 0;
 
   for(int i = 0; i < maxItems; ++i)
@@ -339,7 +344,7 @@ bool GEMTtest::showInfoScreen(void)
         else if (i == 1)
         {
           display.setCursor(64, 56);
-         display.print(confirmOptions[i]);
+          display.print(confirmOptions[i]);
         }   
       }
 
@@ -359,42 +364,42 @@ bool GEMTtest::showInfoScreen(void)
 
 void GEMTtest::showStaticTestFeedback(String msg)
 {
-  eb1.update();
-  displayPrep();
-
-  _testFeedbackMsgs[0] = msg;
-  
-  display.println(_firstLine);
-  for(int i = 0; i < maxItems; ++i)
+  if(!clicked)
   {
-    display.println(_testFeedbackMsgs[i]);
-  }
+    eb1.update();
+    displayPrep();
 
-  display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
+    _testFeedbackMsgs[0] = msg;
+    
+    display.println(_firstLine);
+    for(int i = 0; i < maxItems; ++i)
+    {
+      display.println(_testFeedbackMsgs[i]);
+    }
+
+    // Force "Done" to be printed in last line, lower corner
+    display.setCursor(0, 56);
+    display.print("Done");
   
-  // Ommiting for now. Since dont have machanism atm to exit when test starts
-  //display.println("Done");
 
-  display.display();
-
-  // Delay also affects testing function...
-  delay(1500);
+    display.display();
+  }
+  // We dont want to reset clicked in this case, that ways it carries over to showStaticTestScreen
 }
 
 void GEMTtest::showStaticTestScreen(funcPtr moduleTest)
 {
   setTurnBounds(0, 1);
-  bool testCompleted = false;
-  
+  //attachInterrupt(digitalPinToInterrupt(19), onEb1Clicked, LOW);
+
   while(!clicked)
   {
     // Run test
-    if(!testCompleted)
+    if(testingComplete == false)
     {
       (*moduleTest)();
-      testCompleted = true;
     }
-    
+
     eb1.update();
     displayPrep();
 
@@ -403,14 +408,16 @@ void GEMTtest::showStaticTestScreen(funcPtr moduleTest)
     {
       display.println(_testFeedbackMsgs[i]);
     }
+
     display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
-    
     // Force "Done" to be printed in last line, lower corner
     display.setCursor(0, 56);
     display.print("Done");
 
     display.display();
   }
+
+  _resetMembers();
   resetClicked();
 }
 
