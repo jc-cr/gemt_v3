@@ -61,6 +61,8 @@ class GEMTbase
     // Helper: displays first line
     void setFirstLine(String title);
 
+    void setTurnBounds(int lower, int upper);
+
   protected:
     // Protected default constructor since we dont create an instance of base class
     GEMTbase(){} 

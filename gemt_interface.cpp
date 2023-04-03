@@ -1,6 +1,5 @@
 #include "gemt_interface.h"
 
-
 // Flag: Set to true when display booted up from a menu object
 bool hasBeenBootedUp = false; 
 
@@ -9,9 +8,14 @@ bool firstMenuSet = false;
 // Current state (Position) of the encoder. Max by uint8 is 255
 volatile int ebState = 0; 
 
+// Variables to mange turning bounds for all menus
+int ebUpperBound = 0;
+int ebLowerBound = 0;
+
 // Updated on encoder "click" case, must reset after use 
 volatile bool clicked = false; 
 
+// Used to store the clicked value in case user turns encoder before value was processed
 volatile uint8_t clickedItemNumber = 0;
 
 const uint8_t  logo_bmp [] PROGMEM = 
@@ -82,8 +86,6 @@ const uint8_t  logo_bmp [] PROGMEM =
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-int ebUpperBound = 0;
-
 //========================================================================
 // Menu State Handlers
 //========================================================================
@@ -104,7 +106,6 @@ void startGEMT(GEMTmenu& StartingMenu)
 
 extern void updateMenu(GEMTmenu& NextMenu)
 {
-  
     CurrentMenuPtr = &NextMenu;
 }
 
@@ -119,7 +120,7 @@ void onEb1Encoder(EncoderButton& eb)
   // Reset if encoder goes past active Menu limit
   // BUG: Could cause issues to test functions if a menu only has one item
   // TODO: Setup a global var to track rotation limit that is set whenever a certain test is intiilized...
-  if (abs(eb.position()) >= ebUpperBound)
+  if (eb.position() <= ebLowerBound || abs(eb.position()) >= ebUpperBound)
   {
     eb.resetPosition(0);
   }
@@ -133,8 +134,8 @@ void onEb1Clicked(EncoderButton& eb)
   // Set selection value to current state
   clicked = true;
   clickedItemNumber = ebState; // In case user turns while
-  ebState = 0; // Start at top of page
-  eb.resetPosition(0);
+  eb.resetPosition(0); // Start at top of page
+  ebState = 0; 
 }
 
 //========================================================================
@@ -162,6 +163,19 @@ void GEMTbase::setFirstLine(String title)
 void GEMTbase::resetMembers(void)
 {
   _currIndex = 0;
+}
+
+void GEMTbase::setTurnBounds(int lower, int upper)
+{
+  if (ebLowerBound != lower)
+  {
+    ebLowerBound = lower;
+  }
+
+  if (ebUpperBound != upper)
+  {
+    ebUpperBound = upper;
+  }
 }
 
 //========================================================================
@@ -211,10 +225,8 @@ void GEMTmenu::addItem(String itemName, funcPtr selectionFunction)
 }
 
 void GEMTmenu::run(void)
-{
-  // Condition for executing users selections based on 'clicked' bool
-  ebUpperBound = CurrentMenuPtr->numberOfMenuItems;
-  
+{ 
+  setTurnBounds(0, CurrentMenuPtr->numberOfMenuItems);
   if (clicked)
   {
     resetClicked(); // Reset before proceeding to function
@@ -284,10 +296,10 @@ void GEMTtest::setInfoMsgLine(String msg)
 bool GEMTtest::showInfoScreen(void)
 {
   bool proceed = false;
-
-  const String confirmOptions[3] = {"OK", "|", "Back"};
-  ebUpperBound = 3;
-
+  
+  setTurnBounds(0, 2);
+  const String confirmOptions[2] = {"OK", "Back"};
+  
   while(!clicked)
   {
       eb1.update();
@@ -296,18 +308,18 @@ bool GEMTtest::showInfoScreen(void)
       // Title
       display.println(_firstLine);
 
-      // Stored msgs, will print blank if none available
+      // Stored msgs, will print blank lines if none available
       for(int i = 0; i < maxItems; ++i)
       {
         display.println(_infoMsgs[i]);
       }
 
       // Confirm selection options
-      for (size_t i = 0; i < 3; i++)
+      for (size_t i = 0; i < 2; i++)
       {
         // Highlight line if user is hovering over it
         // Don't highlight the bar though
-        if (ebState == i && i != 1)
+        if (ebState == i)
         {
           display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
         }
@@ -315,22 +327,32 @@ bool GEMTtest::showInfoScreen(void)
         {
           display.setTextColor(SSD1306_WHITE, SSD1306_BLACK); 
         }
-        
-        display.print(confirmOptions[i]);
+
+        // Positional Printing
+        if (i == 0)
+        {
+          display.setCursor(0, 56);
+          display.print(confirmOptions[i]);
+        }
+        else if (i == 1)
+        {
+          display.setCursor(64, 56);
+         display.print(confirmOptions[i]);
+        }   
       }
 
       display.display();
   }
 
-    resetClicked();
+  resetClicked();
 
-    // If user clicked on OK
-    if(clickedItemNumber == 0)
-    {
-      proceed = true;
-    }
+  // If user clicked on OK
+  if(clickedItemNumber == 0)
+  {
+    proceed = true;
+  }
 
-    return proceed;
+  return proceed;
 }
 
 void GEMTtest::showStaticTestFeedback(String msg)
@@ -379,11 +401,12 @@ void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, i
   //   1 - Run
   //   2 - Done
 
-  // TODO: set lower bound to check, right now just going off max because Im lazy...
-  ebUpperBound = 3;
-  // TODO: try changing this to String...
+   // TODO: try changing this to String...
   char buffer[20]; // init buffer to hold expected string size
 
+  // Only 3 selecteable options in test screen
+  // We also "hard-code" since we update upper bound on click
+  setTurnBounds(0, 3);
   while(true)
   {
     if(clicked)
@@ -392,6 +415,7 @@ void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, i
 
       if(clickedItemNumber == 0)
       {
+        // Update bound so user can scroll up to desired value
         ebUpperBound = upperBound;
         ebState = interactiveValue[0]; // So we start at previously saved angle
 
@@ -431,12 +455,11 @@ void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, i
       {
         return;
       }
-
-      ebUpperBound = 3;
     }
 
     String displayText[3] = {String(interactiveValue[0]), "Run", "Done"};
-
+    setTurnBounds(0, 3);
+    
     eb1.update();
     displayPrep();
 
@@ -482,7 +505,6 @@ void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, i
 
     display.display();
   }
-  
 }
 
 
@@ -490,15 +512,6 @@ void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, i
 {
   
 }
-
-// Display section showing 
-// TODO: will need to overide encoder turn limit
-//    could make bounds global? 
-void GEMTtest::updateIntereactiveValue(void)
-{ 
-  
-}
-
 
 
 
