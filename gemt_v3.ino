@@ -2,6 +2,7 @@
 #include "nRFTest.h"
 #include "9gServoTest.h"
 #include "ultrasonicTest.h"
+#include "esrTest.h"
 
 GEMTmenu MainMenu(5);
 GEMTmenu ServoMenu(3);
@@ -25,7 +26,7 @@ void setup(void)
 {
   // Add items to your menus here:
   MainMenu.setFirstLine("GEMT Main Menu: ");
-  MainMenu.addItem("ESR Test", dummyTest);
+  MainMenu.addItem("ESR Test", runESRtest);
   MainMenu.addItem("9G Servo Test", goToServoMenu);
   MainMenu.addItem("nRF Test", runNRFtest);
   MainMenu.addItem("L298N Test", dummyTest);

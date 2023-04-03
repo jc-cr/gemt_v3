@@ -1,6 +1,7 @@
 #ifndef ultrasonictest
 #define ultrasonictest
 
+//#include "gemt_interface.h"
 #include <HCSR04.h>
 
 extern void ultrasonicTest(void);
@@ -27,8 +28,8 @@ void runUltrasonicTest(void)
 }
 
 int distance = 0;
-unsigned long testingInterval = 3000.00; // Ping every 3 second
-unsigned long previousMillis = 0.00;
+static unsigned long testingInterval = 3000.00; // Ping every 3 second
+static unsigned long previousMillis = 0.00;
 int duration = 0;
 
 // NOTE: Since test is constatly updating, we dont have access to click feature

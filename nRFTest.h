@@ -1,7 +1,7 @@
 #ifndef nrftest
 #define nrftest
 
-#include "gemt_interface.h"
+//#include "gemt_interface.h"
 #include <RF24.h>
 
 GEMTtest nRFdisplay;

@@ -1,7 +1,7 @@
 #ifndef servotest
 #define servotest
 
-#include "gemt_interface.h"
+//#include "gemt_interface.h"
 #include <Servo.h>
 
 GEMTtest servoDisplay;
