@@ -369,17 +369,30 @@ void GEMTtest::showStaticTestFeedback(String msg)
   }
 
   display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
-  display.println("Done");
+  
+  // Ommiting for now. Since dont have machanism atm to exit when test starts
+  //display.println("Done");
 
   display.display();
-  delay(2000);
+
+  // Delay also affects testing function...
+  delay(1500);
 }
 
 void GEMTtest::showStaticTestScreen(funcPtr moduleTest)
 {
-  (*moduleTest)();
+  setTurnBounds(0, 1);
+  bool testCompleted = false;
+  
   while(!clicked)
   {
+    // Run test
+    if(!testCompleted)
+    {
+      (*moduleTest)();
+      testCompleted = true;
+    }
+    
     eb1.update();
     displayPrep();
 
@@ -389,9 +402,14 @@ void GEMTtest::showStaticTestScreen(funcPtr moduleTest)
       display.println(_testFeedbackMsgs[i]);
     }
     display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
-    display.println("Done");
+    
+    // Force "Done" to be printed in last line, lower corner
+    display.setCursor(0, 56);
+    display.print("Done");
+
     display.display();
   }
+  resetClicked();
 }
 
 void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, int lowerBound, int upperBound)
@@ -459,7 +477,7 @@ void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, i
 
     String displayText[3] = {String(interactiveValue[0]), "Run", "Done"};
     setTurnBounds(0, 3);
-    
+
     eb1.update();
     displayPrep();
 

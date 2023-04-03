@@ -7,7 +7,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <EncoderButton.h>
-#include <Fonts/Org_01.h>
+
 //#include "HardwareSerial.h" //  Wht we have this? -jc
 
 
@@ -40,7 +40,6 @@ namespace
 }
 
 typedef void (*funcPtr)(void);
-
 
 //  Desc: Provides core helper functions to children
 class GEMTbase

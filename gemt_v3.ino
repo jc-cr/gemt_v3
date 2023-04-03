@@ -32,13 +32,11 @@ void setup(void)
   
   ServoMenu.setFirstLine("9G Servo Submenu: ");
   ServoMenu.addItem("Manual Servo Test", runServoManualTest);
-  ServoMenu.addItem("Auto Servo Test", dummyTest);
+  ServoMenu.addItem("Auto Servo Test", runServoAutoTest);
   ServoMenu.addItem("Back", goToMainMenu);
 
-
-  //...
   MainMenu.bootUp();
-  Serial.begin(115200); // DEBUGGING
+  //Serial.begin(115200); // DEBUGGING
 }
 
 
@@ -54,6 +52,5 @@ int main(void)
     delay(3);
   }
 
-  
   return 0;
 }

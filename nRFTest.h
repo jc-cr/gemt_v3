@@ -8,6 +8,7 @@ GEMTtest nRFdisplay;
 
 extern void nRFtest(void);
 
+// Driver for testing protocol
 void runNRFtest(void)
 {
   nRFdisplay.setFirstLine("nRF Connections: ");
@@ -22,6 +23,8 @@ void runNRFtest(void)
     nRFdisplay.showStaticTestScreen(nRFtest);
   }
 
+  // Must reset memebers to repeat printing of information
+  // TODO: Setup automatic clearing 
   nRFdisplay.resetMembers();
 }
 
