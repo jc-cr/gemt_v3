@@ -322,7 +322,7 @@ bool GEMTtest::showInfoScreen(void)
       }
 
       // Confirm selection options
-      for (size_t i = 0; i < 2; i++)
+      for (int i = 0; i < 2; i++)
       {
         // Highlight line if user is hovering over it
         // Don't highlight the bar though
@@ -352,6 +352,7 @@ bool GEMTtest::showInfoScreen(void)
   }
 
   resetClicked();
+  _resetMembers();
 
   // If user clicked on OK
   if(clickedItemNumber == 0)
@@ -364,26 +365,23 @@ bool GEMTtest::showInfoScreen(void)
 
 void GEMTtest::showStaticTestFeedback(String msg)
 {
-  if(!clicked)
-  {
-    eb1.update();
-    displayPrep();
+  eb1.update();
+  displayPrep();
 
-    _testFeedbackMsgs[0] = msg;
-    
-    display.println(_firstLine);
-    for(int i = 0; i < maxItems; ++i)
-    {
-      display.println(_testFeedbackMsgs[i]);
-    }
-
-    // Force "Done" to be printed in last line, lower corner
-    display.setCursor(0, 56);
-    display.print("Done");
+  _testFeedbackMsgs[0] = msg;
   
-
-    display.display();
+  display.println(_firstLine);
+  for(int i = 0; i < maxItems; ++i)
+  {
+    display.println(_testFeedbackMsgs[i]);
   }
+
+  // Force "Done" to be printed in last line, lower corner
+  display.setCursor(0, 56);
+  display.print("Done");
+
+
+  display.display();
   // We dont want to reset clicked in this case, that ways it carries over to showStaticTestScreen
 }
 
@@ -444,7 +442,7 @@ void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, i
       if(clickedItemNumber == 0)
       {
         // Update bound so user can scroll up to desired value
-        ebUpperBound = upperBound;
+        setTurnBounds(lowerBound, upperBound);
         ebState = interactiveValue[0]; // So we start at previously saved angle
 
         // TODO: Drops back down to 0 when clicking on it again
@@ -497,7 +495,7 @@ void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, i
     display.print(unitID);
 
     // Probably could do this better but the for loop lets us highlight shit, soooo
-    for (size_t i = 0; i < 3; ++i)
+    for (int i = 0; i < 3; ++i)
     {
       // Highlight line if user is hovering over it
       // Dont want to highlight unit id though...

@@ -27,10 +27,18 @@ void runUltrasonicTest(void)
 }
 
 int distance = 0;
+unsigned long testingInterval = 3000.00; // Ping every 3 second
+unsigned long previousMillis = 0.00;
 int duration = 0;
 
+// NOTE: Since test is constatly updating, we dont have access to click feature
+//        If testing interval too short we cant exit test!
 extern void ultrasonicTest(void)
 {
+   if (millis() - previousMillis > testingInterval)
+   {
+    previousMillis = millis();
+
     digitalWrite(triggerPin, LOW);
     delayMicroseconds(2);
     
@@ -41,13 +49,17 @@ extern void ultrasonicTest(void)
     digitalWrite(triggerPin, LOW);
 
     // Reads the echoPin, returns the sound wave travel time in microseconds
-    duration = pulseIn(echoPin, HIGH);
+    duration = round(pulseIn(echoPin, HIGH));
 
     // Calculating the distance
-    distance = duration * (34 / 2000); // was 0.34/2 .. Want to see if 34/2000 is faster
+    distance = round(duration * (34 / 2000)); // was 0.34/2 .. Want to see if 34/2000 is faster
 
     String msg = String("Distance: ") + String(distance) + String(" cm"); 
+
     ultrasonicDisplay.showStaticTestFeedback(msg);
+   }
+
+  return;   
 }
 
 #endif

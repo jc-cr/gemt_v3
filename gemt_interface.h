@@ -146,8 +146,8 @@ void startGEMT(GEMTmenu& StartingMenu);
 extern void updateMenu(GEMTmenu& NextMenu);
 
 // Encoder handler functions
-void onEb1Encoder(EncoderButton& eb);
-void onEb1Clicked(EncoderButton& eb);
+extern void onEb1Encoder(EncoderButton& eb);
+extern void onEb1Clicked(EncoderButton& eb);
 
 
 #endif 
