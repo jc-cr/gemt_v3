@@ -3,6 +3,7 @@
 // Flag: Set to true when display booted up from a menu object
 bool hasBeenBootedUp = false; 
 
+// Flag: Indicate when first menu set at start of program
 bool firstMenuSet = false;
 
 // Current state (Position) of the encoder. Max by uint8 is 255
@@ -18,6 +19,7 @@ volatile bool clicked = false;
 // Used to store the clicked value in case user turns encoder before value was processed
 volatile uint8_t clickedItemNumber = 0;
 
+// GEMT logo
 const uint8_t  logo_bmp [] PROGMEM = 
 {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -412,6 +414,7 @@ void GEMTtest::showStaticTestScreen(funcPtr moduleTest)
   resetClicked();
 }
 
+// TODO: Implement feedback line
 void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, int lowerBound, int upperBound)
 {
   // Screen click options:
@@ -524,15 +527,3 @@ void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, i
     display.display();
   }
 }
-
-
-void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, int lowerBound, int upperBound, String feedbackMsg)
-{
-  
-}
-
-
-
-
-
-

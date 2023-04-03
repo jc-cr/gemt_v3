@@ -16,7 +16,7 @@ void runServoManualTest(void)
 {  
   servo.attach(servoPWMPin);
 
-  servoDisplay.setFirstLine("9g Servo Connections:");
+  servoDisplay.setFirstLine("9g Servo Test Info:");
   servoDisplay.setInfoMsgLine("+ -> 5V"); 
   servoDisplay.setInfoMsgLine("- -> GND"); 
   servoDisplay.setInfoMsgLine("Trigger -> 27");
@@ -37,7 +37,7 @@ void runServoAutoTest(void)
 {
   servo.attach(servoPWMPin);
 
-  servoDisplay.setFirstLine("9g Servo Connections:");
+  servoDisplay.setFirstLine("9g Servo Test Info:");
   servoDisplay.setInfoMsgLine("+ -> 5V"); 
   servoDisplay.setInfoMsgLine("- -> GND"); 
   servoDisplay.setInfoMsgLine("Trigger -> 27");

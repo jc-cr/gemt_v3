@@ -7,9 +7,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <EncoderButton.h>
-
 //#include "HardwareSerial.h" //  Wht we have this? -jc
-
 
 namespace
 {
@@ -54,20 +52,23 @@ class GEMTbase
     // Helper: Create function for clarity in resetting clicked
     void resetClicked(void);
 
-    // Desc: Need to reset index so we dont keep lines
+    // Desc: Used to reset index and memebers after test
     virtual void resetMembers(void);
 
     // Helper: displays first line
     void setFirstLine(String title);
 
+    // Desc: Used to set current screens turn bounderies
     void setTurnBounds(int lower, int upper);
 
   protected:
     // Protected default constructor since we dont create an instance of base class
     GEMTbase(){} 
     
-    // Protected value for what first line of screen should say
+    // Protected value for what first line of screen should say for any screen
     String _firstLine;
+    
+    // Index for populating menu items
     unsigned short int _currIndex = 0;
 };
 

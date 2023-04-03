@@ -1,6 +1,7 @@
 #include "gemt_interface.h"
 #include "nRFTest.h"
 #include "9gServoTest.h"
+#include "ultrasonicTest.h"
 
 GEMTmenu MainMenu(5);
 GEMTmenu ServoMenu(3);
@@ -28,7 +29,7 @@ void setup(void)
   MainMenu.addItem("9G Servo Test", goToServoMenu);
   MainMenu.addItem("nRF Test", runNRFtest);
   MainMenu.addItem("L298N Test", dummyTest);
-  MainMenu.addItem("Ultrasonic Test", dummyTest);
+  MainMenu.addItem("Ultrasonic Test", runUltrasonicTest);
   
   ServoMenu.setFirstLine("9G Servo Submenu: ");
   ServoMenu.addItem("Manual Servo Test", runServoManualTest);
@@ -38,7 +39,6 @@ void setup(void)
   MainMenu.bootUp();
   //Serial.begin(115200); // DEBUGGING
 }
-
 
 int main(void) 
 {

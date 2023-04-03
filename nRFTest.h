@@ -11,9 +11,9 @@ extern void nRFtest(void);
 // Driver for testing protocol
 void runNRFtest(void)
 {
-  nRFdisplay.setFirstLine("nRF Connections: ");
-  nRFdisplay.setInfoMsgLine("nRF to test in SPI1");
-  nRFdisplay.setInfoMsgLine("Working nRF in SPI2");
+  nRFdisplay.setFirstLine("nRF Test Info: ");
+  nRFdisplay.setInfoMsgLine("nRF to test -> SPI1");
+  nRFdisplay.setInfoMsgLine("Working nRF -> SPI2");
 
   // If user chooses to proceed, run test
   // Otherwise we just exit test and return to previous menu
