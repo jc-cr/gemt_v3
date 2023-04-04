@@ -3,14 +3,10 @@
 #include "9gServoTest.h"
 #include "ultrasonicTest.h"
 #include "esrTest.h"
+#include "l298Test.h"
 
 GEMTmenu MainMenu(5);
 GEMTmenu ServoMenu(3);
-
-void dummyTest(void)
-{
-  Serial.println("Entered test");
-}
 
 // TODO: Implement these 2 functions better
 void goToServoMenu(void)
@@ -29,7 +25,7 @@ void setup(void)
   MainMenu.addItem("ESR Test", runESRtest);
   MainMenu.addItem("9G Servo Test", goToServoMenu);
   MainMenu.addItem("nRF Test", runNRFtest);
-  MainMenu.addItem("L298N Test", dummyTest);
+  MainMenu.addItem("L298N Test", runl298Test);
   MainMenu.addItem("Ultrasonic Test", runUltrasonicTest);
   
   ServoMenu.setFirstLine("9G Servo Submenu: ");

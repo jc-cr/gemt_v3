@@ -27,18 +27,18 @@ void runUltrasonicTest(void)
   }
 }
 
+
+unsigned long ultrasonicTestingInterval = 3000.00; // Ping every 3 second
+unsigned long ultrasonicPreviousMillis = 0.00;
 int distance = 0;
-unsigned long testingInterval = 3000.00; // Ping every 3 second
-unsigned long previousMillis = 0.00;
-int duration = 0;
 
 // NOTE: Since test is constatly updating, we dont have access to click feature
 //        If testing interval too short we cant exit test!
 extern void ultrasonicTest(void)
 {
-   if (millis() - previousMillis > testingInterval)
+   if (millis() -  ultrasonicPreviousMillis > ultrasonicTestingInterval)
    {
-    previousMillis = millis();
+     ultrasonicPreviousMillis = millis();
 
     // Calculating the distance
     distance = round(distanceSensor.measureDistanceCm());

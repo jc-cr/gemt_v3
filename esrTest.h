@@ -30,13 +30,15 @@ void runESRtest(void)
   }
 }
 
-static unsigned long testingIntervalA = 4000.00; // Ping every 4 seconds
-static unsigned long previousMillisA = 0.00;
+unsigned long esrTestingInterval = 4000.00; // Ping every 4 seconds
+unsigned long esrPreviousMillis = 0.00;
 
 extern void esrTest(void)
 {
-  if (millis() - previousMillisA > testingIntervalA)
+  if (millis() - esrPreviousMillis > esrTestingInterval)
   {
+    esrPreviousMillis = millis();
+
     #define FASTADC 1
     // defines for setting and clearing register bits
     #ifndef cbi
@@ -68,9 +70,6 @@ extern void esrTest(void)
     }
     //loop to update display with ESR values until user clicks encoder to end test.
   
-  
-
-    previousMillisA = millis();
     esrSamples = measureESR();//this function takes a while,)
     miliVolt = (esrSamples * vRef) / 65.535;//calculating voltage on AIN0 pin
     esrVal = 100 / ((Vcc/miliVolt)-1); //esr value in ohms
