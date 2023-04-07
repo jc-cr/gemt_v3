@@ -16,8 +16,8 @@ namespace
     // Note: If using jumper wires make sure pins are well spaced out.
     // rotary encoder is super noisy and registers false clicks among other issues
     pinA = 19 , // CLK
-    pinB = 2, // DT
-    pinSW = 38 // SW
+    pinB = 15, // DT
+    pinSW = 23 // SW
   };
 
   enum oledDisplayPins

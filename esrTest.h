@@ -5,9 +5,9 @@
 
 GEMTtest esrDisplay;
 
-const unsigned short int  DISCHARGE_PIN       = 42;
+const unsigned short int  DISCHARGE_PIN       = 39;
 const unsigned short int  ESR_PIN             = A0;
-const unsigned short int  PULSE_PIN           = 43;
+const unsigned short int  PULSE_PIN           = 41;
 
 extern void esrTest(void);
 unsigned long measureESR(void);

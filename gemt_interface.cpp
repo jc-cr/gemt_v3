@@ -129,12 +129,14 @@ void onEb1Encoder(EncoderButton& eb)
   }
 
   ebState = abs(eb.position());
+  Serial.println(ebState);
   
 }
 
 void onEb1Clicked(EncoderButton& eb)
 {
   // Set selection value to current state
+  Serial.println("Clicked");
   clicked = true;
   clickedItemNumber = ebState; // In case user turns while
   

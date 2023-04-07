@@ -7,7 +7,7 @@
 GEMTtest servoDisplay;
 Servo servo;
 
-const unsigned short int  servoPWMPin = 9;
+const unsigned short int  servoPWMPin = 7;
 
 extern void manualServoTest(void);
 extern void autoServoTest(void);
@@ -19,7 +19,7 @@ void runServoManualTest(void)
   servoDisplay.setFirstLine("9g Servo Test Info:");
   servoDisplay.setInfoMsgLine("+ -> 5V"); 
   servoDisplay.setInfoMsgLine("- -> GND"); 
-  servoDisplay.setInfoMsgLine("PWM -> 9");
+  servoDisplay.setInfoMsgLine("PWM -> 7");
 
   if (servoDisplay.showInfoScreen())
   {
