@@ -6,7 +6,7 @@ OOP focused adapation of GEMT V2
   - [X] Test selection actions
   - [X] Setup a submenu
   - [X] Setup nRF test example
-  - [] Port over all tests programs
+  - [X] Port over all tests programs
 
 
 
