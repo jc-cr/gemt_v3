@@ -4,8 +4,8 @@
 //#include "gemt_interface.h"
 #include <HCSR04.h>
 
-const unsigned short int  triggerPin = 27;
-const unsigned short int  echoPin = 26;
+const unsigned short int  triggerPin = 31;
+const unsigned short int  echoPin = 30;
 
 UltraSonicDistanceSensor distanceSensor(triggerPin, echoPin);
 GEMTtest ultrasonicDisplay;
@@ -28,7 +28,7 @@ void runUltrasonicTest(void)
 }
 
 
-unsigned long ultrasonicTestingInterval = 3000.00; // Ping every 3 second
+unsigned long ultrasonicTestingInterval = 500.00; // Ping every 3 second
 unsigned long ultrasonicPreviousMillis = 0.00;
 int distance = 0;
 

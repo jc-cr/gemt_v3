@@ -5,9 +5,9 @@
 
 GEMTtest esrDisplay;
 
-const unsigned short int  DISCHARGE_PIN       = 39;
+const unsigned short int  DISCHARGE_PIN       = 41;
 const unsigned short int  ESR_PIN             = A0;
-const unsigned short int  PULSE_PIN           = 41;
+const unsigned short int  PULSE_PIN           = 39;
 
 extern void esrTest(void);
 unsigned long measureESR(void);
@@ -18,8 +18,8 @@ long readVcc(void);
 void runESRtest(void)
 {
   esrDisplay.setFirstLine("ESR Test Info: ");
-  esrDisplay.setInfoMsgLine("Cathode -> Purple");
-  esrDisplay.setInfoMsgLine("Anode -> A0");
+  esrDisplay.setInfoMsgLine("Cathode -> Blue");
+  esrDisplay.setInfoMsgLine("Anode -> GND");
 
   // If user chooses to proceed, run test
   // Otherwise we just exit test and return to previous menu
@@ -35,28 +35,29 @@ unsigned long esrPreviousMillis = 0.00;
 
 extern void esrTest(void)
 {
-  if (millis() - esrPreviousMillis > esrTestingInterval)
-  {
-    esrPreviousMillis = millis();
-
-    #define FASTADC 1
+  #define FASTADC 1
     // defines for setting and clearing register bits
     #ifndef cbi
     #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
     #endif
     #ifndef sbi
     #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
-    #endif
-    double        vRef    = 1.069;//voltage on the Aref pin 
-    double        current = 0.088564;
-    int           count   = 0;
-    unsigned long esrSamples;
-    double        miliVolt;
-    double        esrVal;
-    double        esrCal;
-    double        Vcc;
-    double        totalAvg;
-
+  #endif
+  double        vRef    = 1.069;//voltage on the Aref pin 
+  double        current = 0.088564;
+  int           count   = 0;
+  unsigned long esrSamples;
+  double        miliVolt;
+  double        esrVal;
+  double        esrCal;
+  double        Vcc;
+  double        totalAvg;
+  pinMode(ESR_PIN, INPUT);//reading miliVolt
+  pinMode(PULSE_PIN, OUTPUT);
+  pinMode(DISCHARGE_PIN, OUTPUT);
+  if (millis() - esrPreviousMillis > esrTestingInterval)
+  {
+    esrPreviousMillis = millis();
     Vcc = readVcc(); //sets Vcc to well defined and measured arduino power rail voltage
     analogReference(INTERNAL1V1);//setting vRef to internal reference 1.1V
     digitalWrite(PULSE_PIN,HIGH);//low enables T1
@@ -75,8 +76,8 @@ extern void esrTest(void)
     esrVal = 100 / ((Vcc/miliVolt)-1); //esr value in ohms
     //esrVal = (miliVolt*100)/((Vcc)-(miliVolt));
     esrVal = esrVal * 1000; //esrval in mOhms
-    esrVal = esrVal - 286.77;
     String msg = String("ESR: ") + String(esrVal,2) + String(" mOhms");
+    Serial.println(esrVal);
     esrDisplay.setStaticTestFeedbackLine(msg);
     esrDisplay.showStaticTestFeedback();
   }
