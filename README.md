@@ -1,4 +1,5 @@
-# gemt_v3
+# General Electronic Module Tester (GEMT)
+[V3]
 OOP focused adapation of GEMT V2
 
 ## To Do:
