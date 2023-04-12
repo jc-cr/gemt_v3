@@ -45,7 +45,6 @@ extern void esrTest(void)
   #endif
   double        vRef        = 1.069;//voltage on the Aref pin 
   double        current     = 0.088564;
-  int           count       = 0;
   unsigned long esrSamples;
   double        miliVolt;
   double        esrVal;
