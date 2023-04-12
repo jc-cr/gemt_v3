@@ -17,8 +17,8 @@ void runUltrasonicTest(void)
   ultrasonicDisplay.setFirstLine("Ultrasonic Info:");
   ultrasonicDisplay.setInfoMsgLine("+ -> 5V"); 
   ultrasonicDisplay.setInfoMsgLine("- -> GND"); 
-  ultrasonicDisplay.setInfoMsgLine("Trigger -> 27");
-  ultrasonicDisplay.setInfoMsgLine("Echo -> 26");
+  ultrasonicDisplay.setInfoMsgLine("Trigger -> 31");
+  ultrasonicDisplay.setInfoMsgLine("Echo -> 30");
 
   if(ultrasonicDisplay.showInfoScreen())
   {

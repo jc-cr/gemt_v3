@@ -36,22 +36,21 @@ unsigned long esrPreviousMillis = 0.00;
 extern void esrTest(void)
 {
   #define FASTADC 1
-    // defines for setting and clearing register bits
-    #ifndef cbi
-    #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
-    #endif
-    #ifndef sbi
-    #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+  // defines for setting and clearing register bits
+  #ifndef cbi
+  #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
   #endif
-  double        vRef    = 1.069;//voltage on the Aref pin 
-  double        current = 0.088564;
-  int           count   = 0;
+  #ifndef sbi
+  #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+  #endif
+  double        vRef        = 1.069;//voltage on the Aref pin 
+  double        current     = 0.088564;
+  int           count       = 0;
   unsigned long esrSamples;
   double        miliVolt;
   double        esrVal;
-  double        esrCal;
   double        Vcc;
-  double        totalAvg;
+  
   pinMode(ESR_PIN, INPUT);//reading miliVolt
   pinMode(PULSE_PIN, OUTPUT);
   pinMode(DISCHARGE_PIN, OUTPUT);
@@ -62,20 +61,18 @@ extern void esrTest(void)
     analogReference(INTERNAL1V1);//setting vRef to internal reference 1.1V
     digitalWrite(PULSE_PIN,HIGH);//low enables T1
     digitalWrite(PULSE_PIN,HIGH);//low disables T2
-    //pinMode(BUTTON_PIN,INPUT_PULLUP);//setting up for a button (will use this for zeroing)
     if (FASTADC) 
     {
       sbi(ADCSRA,ADPS2);
       cbi(ADCSRA,ADPS1);
       sbi(ADCSRA,ADPS0);
     }
-    //loop to update display with ESR values until user clicks encoder to end test.
   
     esrSamples = measureESR();//this function takes a while,)
     miliVolt = (esrSamples * vRef) / 65.535;//calculating voltage on AIN0 pin
     esrVal = 100 / ((Vcc/miliVolt)-1); //esr value in ohms
-    //esrVal = (miliVolt*100)/((Vcc)-(miliVolt));
     esrVal = esrVal * 1000; //esrval in mOhms
+    
     String msg = String("ESR: ") + String(esrVal,2) + String(" mOhms");
     Serial.println(esrVal);
     esrDisplay.setStaticTestFeedbackLine(msg);
