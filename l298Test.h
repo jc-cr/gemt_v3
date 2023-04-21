@@ -1,7 +1,11 @@
 #ifndef motortest
 #define motortest
 
+#include "gemt_interface.h"
+
 extern void l298Test(void);
+void VoltL(void);
+void VoltR();
 
 GEMTtest l298Display;
 
@@ -12,13 +16,6 @@ const unsigned short int  L8ENA = 46;
 const unsigned short int  L8IN3 = 38;
 const unsigned short int  L8IN4 = 40;
 const unsigned short int  L8ENB = 44;
-
-// I have no idea what this does
-// voltL and volt R are supposed to refer to line 69
-
-
-
-// End to "I have no idea what this does"
 
 void runl298Test(void)
 {
@@ -36,36 +33,6 @@ void runl298Test(void)
   }
 }
 
-void VoltL()
-{
-    analogWrite(L8ENA, 255);
-    digitalWrite(L8IN1, HIGH);
-    digitalWrite(L8IN2, LOW);
-    delay(500);
-    VoltL();
-    digitalWrite(L8IN1, LOW);
-    digitalWrite(L8IN2, HIGH);
-    delay(500);
-    VoltL();
-    digitalWrite(L8IN1, LOW);
-    digitalWrite(L8IN2, LOW);
-}
-
-void VoltR()
-{
-    analogWrite(L8ENB, 255);
-    digitalWrite(L8IN3, HIGH);
-    digitalWrite(L8IN4, LOW);
-    delay(500);
-    VoltR();
-    digitalWrite(L8IN3, LOW);
-    digitalWrite(L8IN4, HIGH);
-    delay(500);
-    VoltR();
-    digitalWrite(L8IN1, LOW);
-    digitalWrite(L8IN2, LOW);
-
-}
 // NOTE: Since test is constatly updating, we dont have access to click feature
 //        If testing interval too short we cant exit test!
 unsigned long l298nTestingInterval = 1000;
@@ -103,7 +70,7 @@ extern void l298Test(void)
     
     l298Display.setStaticTestFeedbackLine(l1);
     l298Display.setStaticTestFeedbackLine(l2);
-    l298Display.showStaticTestFeedback();
+    l298Display.showStaticTestFeedback(0);
     delay(2000);
     x=x+1;
     break;
@@ -121,7 +88,7 @@ extern void l298Test(void)
     
     l298Display.setStaticTestFeedbackLine(l1);
     l298Display.setStaticTestFeedbackLine(l2);
-    l298Display.showStaticTestFeedback();
+    l298Display.showStaticTestFeedback(0);
     delay(2000);
     x=x+1;
     break;
@@ -138,7 +105,7 @@ extern void l298Test(void)
     
     l298Display.setStaticTestFeedbackLine(l1);
     l298Display.setStaticTestFeedbackLine(l2);
-    l298Display.showStaticTestFeedback();
+    l298Display.showStaticTestFeedback(0);
     delay(2000);
     x=x+1;
     break;
@@ -155,7 +122,7 @@ extern void l298Test(void)
     
     l298Display.setStaticTestFeedbackLine(l1);
     l298Display.setStaticTestFeedbackLine(l2);
-    l298Display.showStaticTestFeedback();
+    l298Display.showStaticTestFeedback(0);
     delay(2000);
     x=5;
     break;
@@ -165,6 +132,34 @@ extern void l298Test(void)
    }
 }
 
+void VoltL()
+{
+  analogWrite(L8ENA, 255);
+  digitalWrite(L8IN1, HIGH);
+  digitalWrite(L8IN2, LOW);
+  delay(500);
+  VoltL();
+  digitalWrite(L8IN1, LOW);
+  digitalWrite(L8IN2, HIGH);
+  delay(500);
+  VoltL();
+  digitalWrite(L8IN1, LOW);
+  digitalWrite(L8IN2, LOW);
+}
 
+void VoltR()
+{
+  analogWrite(L8ENB, 255);
+  digitalWrite(L8IN3, HIGH);
+  digitalWrite(L8IN4, LOW);
+  delay(500);
+  VoltR();
+  digitalWrite(L8IN3, LOW);
+  digitalWrite(L8IN4, HIGH);
+  delay(500);
+  VoltR();
+  digitalWrite(L8IN1, LOW);
+  digitalWrite(L8IN2, LOW);
+}
 
 #endif

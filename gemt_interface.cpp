@@ -145,7 +145,7 @@ void onEb1Clicked(EncoderButton& eb)
 }
 
 //========================================================================
-// GEMT Base Implementations
+// GEMT Base Implementations (Defaults)
 //========================================================================
 
 void GEMTbase::displayPrep(void)
@@ -169,6 +169,7 @@ void GEMTbase::setFirstLine(String title)
 void GEMTbase::resetMembers(void)
 {
   _currIndex = 0;
+
 }
 
 void GEMTbase::setTurnBounds(int lower, int upper)
@@ -372,7 +373,7 @@ void GEMTtest::setStaticTestFeedbackLine(String msg)
   ++_currIndex;
 }
 
-void GEMTtest::showStaticTestFeedback(void)
+void GEMTtest::showStaticTestFeedback(bool finalMessage)
 {
   eb1.update();
   displayPrep();
@@ -383,6 +384,7 @@ void GEMTtest::showStaticTestFeedback(void)
     display.println(_testFeedbackMsgs[i]);
   }
 
+  
   // Force "Done" to be printed in last line, lower corner
   display.setCursor(0, 56);
   display.print("Done");
@@ -391,13 +393,17 @@ void GEMTtest::showStaticTestFeedback(void)
   display.display();
   // We dont want to reset clicked in this case, that ways it carries over to showStaticTestScreen
 
-  _currIndex = 0;
+  // Reset if not final message
+  if(!finalMessage)
+  {
+    _resetMembers();
+  }
+  
 }
 
 void GEMTtest::showStaticTestScreen(funcPtr moduleTest)
 {
   setTurnBounds(0, 1);
-  //attachInterrupt(digitalPinToInterrupt(19), onEb1Clicked, LOW);
 
   while(!clicked)
   {
@@ -540,4 +546,6 @@ void GEMTtest::showInteractiveTestScreen(funcPtr writeFunction, String unitID, i
 
     display.display();
   }
+
+  _resetMembers();
 }

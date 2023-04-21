@@ -1,7 +1,7 @@
 #ifndef esrtest
 #define esrtest
 
-//#include "gemt_interface.h"
+#include "gemt_interface.h"
 
 GEMTtest esrDisplay;
 
@@ -75,7 +75,7 @@ extern void esrTest(void)
     String msg = String("ESR: ") + String(esrVal,2) + String(" mOhms");
     Serial.println(esrVal);
     esrDisplay.setStaticTestFeedbackLine(msg);
-    esrDisplay.showStaticTestFeedback();
+    esrDisplay.showStaticTestFeedback(0);
   }
 }
 

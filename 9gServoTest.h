@@ -1,8 +1,8 @@
 #ifndef servotest
 #define servotest
 
-//#include "gemt_interface.h"
 #include <Servo.h>
+#include "gemt_interface.h"
 
 GEMTtest servoDisplay;
 Servo servo;
@@ -27,9 +27,7 @@ void runServoManualTest(void)
     servoDisplay.showInteractiveTestScreen(manualServoTest, "Angle: ",  0, 180);
   }
 
-  // Reset when done, else will keep populating fields like info screen
   servo.detach();
-  servoDisplay.resetMembers();
 }
 
 void runServoAutoTest(void)
@@ -67,8 +65,9 @@ extern void autoServoTest(void)
 
   int angle = 0;
 
-  servoDisplay.setStaticTestFeedbackLine("Servo will now rotate to 180 degrees in 45 degree increments");
-  servoDisplay.showStaticTestFeedback();
+  servoDisplay.setStaticTestFeedbackLine("Servo will now rotate");
+  servoDisplay.setStaticTestFeedbackLine("to 180 degrees in 45 degree increments");
+  servoDisplay.showStaticTestFeedback(0);
   delay(2000);
   
   for (int i = 0; i <= 4; ++i)
@@ -77,7 +76,7 @@ extern void autoServoTest(void)
     String msg = String("Angle: ") + String(angle);
     servo.write(angle);
     servoDisplay.setStaticTestFeedbackLine(msg);
-    servoDisplay.showStaticTestFeedback();
+    servoDisplay.showStaticTestFeedback(0);
     delay(2000); // Extra delay to allow servo to reach pos
   }
   for (int i = 0; i <= 4; ++i)
@@ -86,10 +85,13 @@ extern void autoServoTest(void)
     String msg = String("Angle: ") + String(angle);
     servo.write(angle);
     servoDisplay.setStaticTestFeedbackLine(msg);
-    servoDisplay.showStaticTestFeedback();
+    servoDisplay.showStaticTestFeedback(0);
     delay(2000); // Extra delay to allow servo to reach pos 
   }
 
+  String msg = String("Angle: ") + String("0");
+  servoDisplay.setStaticTestFeedbackLine(msg);
+  servoDisplay.showStaticTestFeedback(1);
   servoDisplay.testingComplete = true;
 }
 

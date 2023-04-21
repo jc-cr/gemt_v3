@@ -7,7 +7,6 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <EncoderButton.h>
-//#include "HardwareSerial.h" //  Wht we have this? -jc
 
 namespace
 {
@@ -118,7 +117,8 @@ class GEMTtest : public GEMTbase
     void setStaticTestFeedbackLine(String msg);
 
     // Desc: Will display static test feedback msgs after set
-    void showStaticTestFeedback(void);
+    // resetMemebers - In last static feedbackline, don't reset in order for message to remain when test complete
+    void showStaticTestFeedback(bool finalMessage);
 
     // Desc: Displays a screen with test title, user updateble numbers line, "Run" selec, and  "Done" selec
     void showInteractiveTestScreen(funcPtr writeFunction, String unitID, int lowerBound, int upperBound);

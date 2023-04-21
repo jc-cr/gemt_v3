@@ -1,7 +1,7 @@
 #ifndef nrftest
 #define nrftest
 
-//#include "gemt_interface.h"
+#include "gemt_interface.h"
 #include <RF24.h>
 
 GEMTtest nRFdisplay;
@@ -41,10 +41,10 @@ extern void nRFtest(void)
   const byte address[6] = "00002";
   
  
-  nRFdisplay.setStaticTestFeedbackLine("nRF24 Test started...");
-  nRFdisplay.showStaticTestFeedback();
-
-  delay(1500); // Add delays to make results readable
+  nRFdisplay.setStaticTestFeedbackLine("SPI1 RX");
+  nRFdisplay.setStaticTestFeedbackLine("Test starting!");
+  nRFdisplay.showStaticTestFeedback(0);
+  delay(1000); // Add delays to make results readable
 
   // Test connections, display feedback
   if (spi2.isChipConnected() == 1 && spi1.isChipConnected() == 1) 
@@ -90,9 +90,12 @@ extern void nRFtest(void)
     // If first test passed, continue to next test
     if (result == 1)
     {
-      nRFdisplay.setStaticTestFeedbackLine("SPI2 TX Passed... ");
-      nRFdisplay.setStaticTestFeedbackLine("Starting RX test!");
-      nRFdisplay.showStaticTestFeedback();
+      nRFdisplay.setStaticTestFeedbackLine("SPI1 TX Passed... ");
+      nRFdisplay.setStaticTestFeedbackLine("SPI1 TX");
+      nRFdisplay.setStaticTestFeedbackLine("Test starting!");
+      nRFdisplay.showStaticTestFeedback(0);
+      delay(1500);
+      
       
       // TEST 2: SPI2 RX
       //----------------------------------------------
@@ -135,23 +138,26 @@ extern void nRFtest(void)
   
   else if (spi2.isChipConnected() == 1 && spi1.isChipConnected() == 0) 
   {
-    nRFdisplay.setStaticTestFeedbackLine("SPI1 not detected!");
-    nRFdisplay.showStaticTestFeedback();
+    nRFdisplay.setStaticTestFeedbackLine("SPI1");
+    nRFdisplay.setStaticTestFeedbackLine("not detected!");
+    nRFdisplay.showStaticTestFeedback(0);
     delay(1500);
   }
   
   else if ( spi2.isChipConnected() == 0 && spi1.isChipConnected() == 1)
   {
-    nRFdisplay.setStaticTestFeedbackLine("SPI2 not detected!");
-    nRFdisplay.showStaticTestFeedback();
+    nRFdisplay.setStaticTestFeedbackLine("SPI2");
+    nRFdisplay.setStaticTestFeedbackLine("not detected!");
+    nRFdisplay.showStaticTestFeedback(0);
     delay(1500);
     result = 0;
   }
   
   else 
   {
-    nRFdisplay.setStaticTestFeedbackLine("SPI1, SPI2 not detected!");
-    nRFdisplay.showStaticTestFeedback();
+    nRFdisplay.setStaticTestFeedbackLine("SPI1, SPI2");
+    nRFdisplay.setStaticTestFeedbackLine("not detected!");
+    nRFdisplay.showStaticTestFeedback(0);
     delay(1500);
     result = 0;
   }
@@ -160,14 +166,14 @@ extern void nRFtest(void)
   // Return final results
   if (result == true)
   {
-    nRFdisplay.setStaticTestFeedbackLine("NRF TEST PASSED");
-    nRFdisplay.showStaticTestFeedback();
+    nRFdisplay.setStaticTestFeedbackLine("NRF test passed");
+    nRFdisplay.showStaticTestFeedback(1);
     delay(1500);
   }
   else
   {
-    nRFdisplay.setStaticTestFeedbackLine("NRF TEST FAILED");
-    nRFdisplay.showStaticTestFeedback();
+    nRFdisplay.setStaticTestFeedbackLine("NRF test failed");
+    nRFdisplay.showStaticTestFeedback(1);
     delay(1500);
   }
 
