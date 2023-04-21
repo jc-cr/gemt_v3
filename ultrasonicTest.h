@@ -4,8 +4,8 @@
 //#include "gemt_interface.h"
 #include <HCSR04.h>
 
-const unsigned short int  triggerPin = 31;
-const unsigned short int  echoPin = 30;
+const unsigned short int  triggerPin = 30;
+const unsigned short int  echoPin = 28;
 
 UltraSonicDistanceSensor distanceSensor(triggerPin, echoPin);
 GEMTtest ultrasonicDisplay;
@@ -17,8 +17,8 @@ void runUltrasonicTest(void)
   ultrasonicDisplay.setFirstLine("Ultrasonic Info:");
   ultrasonicDisplay.setInfoMsgLine("+ -> 5V"); 
   ultrasonicDisplay.setInfoMsgLine("- -> GND"); 
-  ultrasonicDisplay.setInfoMsgLine("Trigger -> 31");
-  ultrasonicDisplay.setInfoMsgLine("Echo -> 30");
+  ultrasonicDisplay.setInfoMsgLine("Trigger -> 30");
+  ultrasonicDisplay.setInfoMsgLine("Echo -> 28");
 
   if(ultrasonicDisplay.showInfoScreen())
   {

@@ -17,7 +17,7 @@ namespace
     // rotary encoder is super noisy and registers false clicks among other issues
     pinA = 19 , // CLK
     pinB = 15, // DT
-    pinSW = 23 // SW
+    pinSW = 26 // SW
   };
 
   enum oledDisplayPins

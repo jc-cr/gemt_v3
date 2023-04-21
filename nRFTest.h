@@ -32,7 +32,7 @@ extern void nRFtest(void)
   //create an RF24 object
   // Testing done on SPI2 port input
   RF24 spi1(42, 43);  // CE, CSN
-  RF24 spi2(24, 25);  // CE, CSN
+  RF24 spi2(24, 22);  // CE, CSN
 
   spi1.begin();
   spi2.begin();

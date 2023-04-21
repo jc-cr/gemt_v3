@@ -6,47 +6,18 @@ extern void l298Test(void);
 GEMTtest l298Display;
 
 // Initialize pins
-const unsigned short int  L8IN1 = 5;
-const unsigned short int  L8IN2 = 6;
-const unsigned short int  L8ENA = 7;
-const unsigned short int  L8IN3 = 8;
-const unsigned short int  L8IN4 = 9;
-const unsigned short int  L8ENB = 10;
+const unsigned short int  L8IN1 = 34;
+const unsigned short int  L8IN2 = 36;
+const unsigned short int  L8ENA = 46;
+const unsigned short int  L8IN3 = 38;
+const unsigned short int  L8IN4 = 40;
+const unsigned short int  L8ENB = 44;
 
 // I have no idea what this does
 // voltL and volt R are supposed to refer to line 69
-/*
-digitalWrite(L8IN1, LOW);
-digitalWrite(L8IN2, LOW);
-digitalWrite(L8IN3, LOW);
-digitalWrite(L8IN4, LOW);
 
-analogWrite(L8ENA, 255);
-digitalWrite(L8IN1, HIGH);
-digitalWrite(L8IN2, LOW);
-delay(2000);
-voltL();
-digitalWrite(L8IN1, LOW);
-digitalWrite(L8IN2, HIGH);
-delay(2000);
-voltL();
-digitalWrite(L8IN1, LOW);
-digitalWrite(L8IN2, LOW);
-  
-analogWrite(L8ENB, 255);
-digitalWrite(L8IN3, HIGH);
-digitalWrite(L8IN4, LOW);
-delay(2000);
-voltR();
-digitalWrite(L8IN3, LOW);
-digitalWrite(L8IN4, HIGH);
-delay(2000);
-voltR();
 
-digitalWrite(L8IN3, LOW);
-digitalWrite(L8IN4, LOW);
-delay(200);
-*/
+
 // End to "I have no idea what this does"
 
 void runl298Test(void)
@@ -65,40 +36,135 @@ void runl298Test(void)
   }
 }
 
+void VoltL()
+{
+    analogWrite(L8ENA, 255);
+    digitalWrite(L8IN1, HIGH);
+    digitalWrite(L8IN2, LOW);
+    delay(500);
+    VoltL();
+    digitalWrite(L8IN1, LOW);
+    digitalWrite(L8IN2, HIGH);
+    delay(500);
+    VoltL();
+    digitalWrite(L8IN1, LOW);
+    digitalWrite(L8IN2, LOW);
+}
 
+void VoltR()
+{
+    analogWrite(L8ENB, 255);
+    digitalWrite(L8IN3, HIGH);
+    digitalWrite(L8IN4, LOW);
+    delay(500);
+    VoltR();
+    digitalWrite(L8IN3, LOW);
+    digitalWrite(L8IN4, HIGH);
+    delay(500);
+    VoltR();
+    digitalWrite(L8IN1, LOW);
+    digitalWrite(L8IN2, LOW);
+
+}
 // NOTE: Since test is constatly updating, we dont have access to click feature
 //        If testing interval too short we cant exit test!
-unsigned long l298nTestingInterval = 3000;
+unsigned long l298nTestingInterval = 1000;
 unsigned long l298nPreviousMillis = 0.00;
 
 extern void l298Test(void)
 {
-  if (millis() - l298nPreviousMillis > l298nTestingInterval)
+  int x = 1;
+  int value_in1; // Voltage readings from left output. Front & backward = in1 & in2
+  float voltage_in1;
+  int value_in2;
+  float voltage_in2;
+  String l1;
+  String l2;
+  digitalWrite(L8IN1, LOW);
+  digitalWrite(L8IN2, LOW);
+  digitalWrite(L8IN3, LOW);
+  digitalWrite(L8IN4, LOW);
+  
+  if (x<4)
    {
-    l298nPreviousMillis = millis();
+    switch (x) 
+    {
+  case 1:
+    analogWrite(L8ENA, 255);
+    digitalWrite(L8IN1, HIGH);
+    digitalWrite(L8IN2, LOW);
+    value_in1 = analogRead(A1); // Voltage readings from left output. Front & backward = in1 & in2
+    voltage_in1 = value_in1 * 5.0/1023;
+    value_in2 = analogRead(A2);
+    voltage_in2 = value_in2 * 5.0/1023;
 
-    int value_in1 = analogRead(A1); // Voltage readings from left output. Front & backward = in1 & in2
-    float voltage_in1 = value_in1 * 5.0/1023;
-    int value_in2 = analogRead(A2);
-    float voltage_in2 = value_in2 * 5.0/1023;
-
-    int value_in3 = analogRead(A3); // Voltage readings from right output. Front & backward = in3 & in4
-    float voltage_in3 = value_in3 * 5.0/1023;
-    int value_in4 = analogRead(A4);
-    float voltage_in4 = value_in4 * 5.0/1023;
-
-    String l1 = String("V-Left1: ") + String(voltage_in1, 2);
-    String l2 = String("V-Left2: ") + String(voltage_in2, 2);
+    l1 = String("V-Left1: ") + String(voltage_in1, 2);
+    l2 = String("V-Left2: ") + String(voltage_in2, 2);
     
-    String r1 = String("V-Right1: ") + String(voltage_in3, 2); // 20 char here
-    String r2 = String("V-Right1: ") + String(voltage_in4, 2); // 20 char here
-
     l298Display.setStaticTestFeedbackLine(l1);
     l298Display.setStaticTestFeedbackLine(l2);
-    l298Display.setStaticTestFeedbackLine(r1);
-    l298Display.setStaticTestFeedbackLine(r2);
     l298Display.showStaticTestFeedback();
+    delay(2000);
+    x=x+1;
+    break;
+  case 2:
+    analogWrite(L8ENA, 255);
+    digitalWrite(L8IN1, HIGH);
+    digitalWrite(L8IN2, LOW);
+    value_in1 = analogRead(A1); // Voltage readings from left output. Front & backward = in1 & in2
+    voltage_in1 = value_in1 * 5.0/1023;
+    value_in2 = analogRead(A2);
+    voltage_in2 = value_in2 * 5.0/1023;
+
+    l1 = String("V-Left1: ") + String(voltage_in1, 2);
+    l2 = String("V-Left2: ") + String(voltage_in2, 2);
+    
+    l298Display.setStaticTestFeedbackLine(l1);
+    l298Display.setStaticTestFeedbackLine(l2);
+    l298Display.showStaticTestFeedback();
+    delay(2000);
+    x=x+1;
+    break;
+   case 3:
+    analogWrite(L8ENA, 255);
+    digitalWrite(L8IN1, LOW);
+    digitalWrite(L8IN2, HIGH);
+    value_in1 = analogRead(A1); // Voltage readings from left output. Front & backward = in1 & in2
+    voltage_in1 = value_in1 * 5.0/1023;
+    value_in2 = analogRead(A2);
+    voltage_in2 = value_in2 * 5.0/1023;
+    l1 = String("V-Left1: ") + String(voltage_in1, 2);
+    l2 = String("V-Left2: ") + String(voltage_in2, 2);
+    
+    l298Display.setStaticTestFeedbackLine(l1);
+    l298Display.setStaticTestFeedbackLine(l2);
+    l298Display.showStaticTestFeedback();
+    delay(2000);
+    x=x+1;
+    break;
+   case 4:
+    analogWrite(L8ENA, 255);
+    digitalWrite(L8IN1, LOW);
+    digitalWrite(L8IN2, HIGH);
+    value_in1 = analogRead(A1); // Voltage readings from left output. Front & backward = in1 & in2
+    voltage_in1 = value_in1 * 5.0/1023;
+    value_in2 = analogRead(A2);
+    voltage_in2 = value_in2 * 5.0/1023;
+    l1 = String("V-Left1: ") + String(voltage_in1, 2);
+    l2 = String("V-Left2: ") + String(voltage_in2, 2);
+    
+    l298Display.setStaticTestFeedbackLine(l1);
+    l298Display.setStaticTestFeedbackLine(l2);
+    l298Display.showStaticTestFeedback();
+    delay(2000);
+    x=5;
+    break;
+    }
+    
+
    }
 }
+
+
 
 #endif
