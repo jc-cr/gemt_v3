@@ -162,7 +162,7 @@ void GEMTbase::resetClicked(void) const
 }
 
 
-void GEMTbase::setFirstLine(String title) const
+void GEMTbase::setFirstLine(String title)
 {
   _firstLine = title;
 }
@@ -387,21 +387,22 @@ void GEMTtest::showStaticTestFeedback(int displayDuration)
 
   
   // Force "Done" to be printed in last line, lower corner
+  display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
   display.setCursor(0, 56);
   display.print("Done");
 
 
   display.display();
  
-
   // Display for specified duration, will exit if clicked
   // Also if clicked, we won't reset in order to carry state over to next function
   unsigned long startTime = millis();
-  while (!clicked || displayDuration > 0)
+  while (!clicked && displayDuration > 0)
   {
     eb1.update();
+    display.display();
     unsigned long elapsedTime = millis() - startTime;
-
+  
     if (elapsedTime >= displayDuration)
     {
       break;
@@ -415,31 +416,12 @@ void GEMTtest::showStaticTestScreen(funcPtr moduleTest)
 {
   setTurnBounds(0, 1);
 
-  while(!clicked)
+  while(!clicked && !testingComplete)
   {
-    // Run test
-    if(testingComplete == false)
-    {
-      (*moduleTest)();
-    }
-
-    eb1.update();
-    displayPrep();
-
-    display.println(_firstLine);
-    for(int i = 0; i < maxItems; ++i)
-    {
-      display.println(_testFeedbackMsgs[i]);
-    }
-
-    display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
-    // Force "Done" to be printed in last line, lower corner
-    display.setCursor(0, 56);
-    display.print("Done");
-
-    display.display();
+    (*moduleTest)();
   }
 
+  testingComplete = false;
   _resetMembers();
   resetClicked();
 }

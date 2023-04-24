@@ -127,8 +127,6 @@ extern void l298Test(void)
     x=5;
     break;
     }
-    
-
    }
 }
 

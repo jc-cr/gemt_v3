@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "gemt_interface.h"
 
 GEMTtest esrDisplay;
@@ -30,9 +29,6 @@ void runESRtest(void)
   }
 }
 
-unsigned long esrTestingInterval = 4000.00; // Ping every 4 seconds
-unsigned long esrPreviousMillis = 0.00;
-
 extern void esrTest(void)
 {
   #define FASTADC 1
@@ -53,30 +49,27 @@ extern void esrTest(void)
   pinMode(ESR_PIN, INPUT);//reading miliVolt
   pinMode(PULSE_PIN, OUTPUT);
   pinMode(DISCHARGE_PIN, OUTPUT);
-  if (millis() - esrPreviousMillis > esrTestingInterval)
-  {
-    esrPreviousMillis = millis();
-    Vcc = readVcc(); //sets Vcc to well defined and measured arduino power rail voltage
-    analogReference(INTERNAL1V1);//setting vRef to internal reference 1.1V
-    digitalWrite(PULSE_PIN,HIGH);//low enables T1
-    digitalWrite(PULSE_PIN,HIGH);//low disables T2
-    if (FASTADC) 
-    {
-      sbi(ADCSRA,ADPS2);
-      cbi(ADCSRA,ADPS1);
-      sbi(ADCSRA,ADPS0);
-    }
   
-    esrSamples = measureESR();//this function takes a while,)
-    miliVolt = (esrSamples * vRef) / 65.535;//calculating voltage on AIN0 pin
-    esrVal = 100 / ((Vcc/miliVolt)-1); //esr value in ohms
-    esrVal = esrVal * 1000; //esrval in mOhms
-    
-    String msg = String("ESR: ") + String(esrVal,2) + String(" mOhms");
-
-    esrDisplay.setStaticTestFeedbackLine(msg);
-    esrDisplay.showStaticTestFeedback(3000);
+  Vcc = readVcc(); //sets Vcc to well defined and measured arduino power rail voltage
+  analogReference(INTERNAL1V1);//setting vRef to internal reference 1.1V
+  digitalWrite(PULSE_PIN,HIGH);//low enables T1
+  digitalWrite(PULSE_PIN,HIGH);//low disables T2
+  if (FASTADC) 
+  {
+    sbi(ADCSRA,ADPS2);
+    cbi(ADCSRA,ADPS1);
+    sbi(ADCSRA,ADPS0);
   }
+
+  esrSamples = measureESR();//this function takes a while,)
+  miliVolt = (esrSamples * vRef) / 65.535;//calculating voltage on AIN0 pin
+  esrVal = 100 / ((Vcc/miliVolt)-1); //esr value in ohms
+  esrVal = esrVal * 1000; //esrval in mOhms
+  
+  String msg = String("ESR: ") + String(esrVal,2) + String(" mOhms");
+
+  esrDisplay.setStaticTestFeedbackLine(msg);
+  esrDisplay.showStaticTestFeedback(2000);
 }
 
 unsigned long measureESR(void)

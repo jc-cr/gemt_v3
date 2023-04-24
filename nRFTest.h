@@ -92,8 +92,7 @@ extern void nRFtest(void)
       nRFdisplay.setStaticTestFeedbackLine("SPI1 TX Passed... ");
       nRFdisplay.setStaticTestFeedbackLine("SPI1 TX");
       nRFdisplay.setStaticTestFeedbackLine("Test starting!");
-      nRFdisplay.showStaticTestFeedback(0);
-      delay(1500);
+      nRFdisplay.showStaticTestFeedback(1500);
       
       
       // TEST 2: SPI2 RX
@@ -139,16 +138,14 @@ extern void nRFtest(void)
   {
     nRFdisplay.setStaticTestFeedbackLine("SPI1");
     nRFdisplay.setStaticTestFeedbackLine("not detected!");
-    nRFdisplay.showStaticTestFeedback(0);
-    delay(1500);
+    nRFdisplay.showStaticTestFeedback(1500);
   }
   
   else if ( spi2.isChipConnected() == 0 && spi1.isChipConnected() == 1)
   {
     nRFdisplay.setStaticTestFeedbackLine("SPI2");
     nRFdisplay.setStaticTestFeedbackLine("not detected!");
-    nRFdisplay.showStaticTestFeedback(0);
-    delay(1500);
+    nRFdisplay.showStaticTestFeedback(1500);
     result = 0;
   }
   
@@ -156,8 +153,7 @@ extern void nRFtest(void)
   {
     nRFdisplay.setStaticTestFeedbackLine("SPI1, SPI2");
     nRFdisplay.setStaticTestFeedbackLine("not detected!");
-    nRFdisplay.showStaticTestFeedback(0);
-    delay(1500);
+    nRFdisplay.showStaticTestFeedback(1500);
     result = 0;
   }
 
@@ -166,14 +162,12 @@ extern void nRFtest(void)
   if (result == true)
   {
     nRFdisplay.setStaticTestFeedbackLine("NRF test passed");
-    nRFdisplay.showStaticTestFeedback(1);
-    delay(1500);
+    nRFdisplay.showStaticTestFeedback(3000);
   }
   else
   {
     nRFdisplay.setStaticTestFeedbackLine("NRF test failed");
-    nRFdisplay.showStaticTestFeedback(1);
-    delay(1500);
+    nRFdisplay.showStaticTestFeedback(3000);
   }
 
   nRFdisplay.testingComplete = true;

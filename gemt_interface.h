@@ -54,7 +54,7 @@ class GEMTbase
     virtual void resetMembers(void);
 
     // Helper: displays first line
-    void setFirstLine(String title) const;
+    void setFirstLine(String title);
 
     // Desc: Used to set current screens turn bounderies
     void setTurnBounds(int lower, int upper) const;

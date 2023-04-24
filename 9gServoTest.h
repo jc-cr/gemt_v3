@@ -67,7 +67,7 @@ extern void autoServoTest(void)
 
   servoDisplay.setStaticTestFeedbackLine("Servo will now rotate");
   servoDisplay.setStaticTestFeedbackLine("to 180 degrees in 45 degree increments");
-  servoDisplay.showStaticTestFeedback(2000);
+  servoDisplay.showStaticTestFeedback(1500);
   
   for (int i = 0; i <= 4; ++i)
   {
@@ -88,6 +88,7 @@ extern void autoServoTest(void)
 
   String msg = String("Angle: ") + String("0");
   servoDisplay.setStaticTestFeedbackLine(msg);
-  servoDisplay.showStaticTestFeedback(60000); // Show screen for like a minute. User should exit before. If they dont then screen go blank
+  servoDisplay.showStaticTestFeedback(4000);
+
   servoDisplay.testingComplete = true;
 }
