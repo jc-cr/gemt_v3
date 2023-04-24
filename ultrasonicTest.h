@@ -1,5 +1,5 @@
-#ifndef ultrasonictest
-#define ultrasonictest
+#pragma once
+
 
 #include "gemt_interface.h"
 #include <HCSR04.h>
@@ -45,8 +45,6 @@ extern void ultrasonicTest(void)
     String msg = String("Distance: ") + String(distance, 2) + String(" cm"); 
 
     ultrasonicDisplay.setStaticTestFeedbackLine(msg);
-    ultrasonicDisplay.showStaticTestFeedback(0);
+    ultrasonicDisplay.showStaticTestFeedback(2000);
    } 
 }
-
-#endif

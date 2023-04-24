@@ -1,5 +1,4 @@
-#ifndef gemt_interface_h
-#define gemt_interface_h
+#pragma once
 
 #include "Arduino.h"
 
@@ -46,19 +45,19 @@ class GEMTbase
     virtual ~GEMTbase(){};
 
     // Helper: Function to quickly call actions required to prep screen for printing
-    void displayPrep(void);
+    void displayPrep(void) const;
 
     // Helper: Create function for clarity in resetting clicked
-    void resetClicked(void);
+    void resetClicked(void) const;
 
     // Desc: Used to reset index and memebers after test
     virtual void resetMembers(void);
 
     // Helper: displays first line
-    void setFirstLine(String title);
+    void setFirstLine(String title) const;
 
     // Desc: Used to set current screens turn bounderies
-    void setTurnBounds(int lower, int upper);
+    void setTurnBounds(int lower, int upper) const;
 
   protected:
     // Protected default constructor since we dont create an instance of base class
@@ -80,7 +79,7 @@ class GEMTmenu : public GEMTbase
 
     // Only need to execute once.
     // Defines boot up actions: Check hardware, set interupt handlers, show logo
-    void bootUp(void);
+    void bootUp(void) const;
 
     // Set line items of menu. Must be at least len of  instatiated value
     void addItem(String itemName, funcPtr selectionFunction);
@@ -102,7 +101,6 @@ class GEMTtest : public GEMTbase
     explicit GEMTtest(){};
 
     // Desc: Sets info msgs line by line, with a cap of 6 msgs
-    // TODO: Add length handling
     void setInfoMsgLine(String msg);
 
     // Desc:  Test if user wishes to proceed or not.
@@ -117,14 +115,11 @@ class GEMTtest : public GEMTbase
     void setStaticTestFeedbackLine(String msg);
 
     // Desc: Will display static test feedback msgs after set
-    // resetMemebers - In last static feedbackline, don't reset in order for message to remain when test complete
-    void showStaticTestFeedback(bool finalMessage);
+    // autoClear - In last static feedbackline, don't reset in order for message to remain when test complete
+    void showStaticTestFeedback(int displayDuration);
 
     // Desc: Displays a screen with test title, user updateble numbers line, "Run" selec, and  "Done" selec
     void showInteractiveTestScreen(funcPtr writeFunction, String unitID, int lowerBound, int upperBound);
-
-    // Desc: Displays a screen with test title, user updateble numbers line , result feedback line, "Run" selec, and  "Done" selec
-    void showInteractiveTestScreen(funcPtr writeFunction, String unitID, int lowerBound, int upperBound, String feedbackMsg);
 
     void updateIntereactiveValue(void);
     int interactiveValue[1] = {0}; 
@@ -152,4 +147,3 @@ extern void onEb1Encoder(EncoderButton& eb);
 extern void onEb1Clicked(EncoderButton& eb);
 
 
-#endif 

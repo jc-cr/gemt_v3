@@ -1,5 +1,5 @@
-#ifndef nrftest
-#define nrftest
+#pragma once
+
 
 #include "gemt_interface.h"
 #include <RF24.h>
@@ -43,8 +43,7 @@ extern void nRFtest(void)
  
   nRFdisplay.setStaticTestFeedbackLine("SPI1 RX");
   nRFdisplay.setStaticTestFeedbackLine("Test starting!");
-  nRFdisplay.showStaticTestFeedback(0);
-  delay(1000); // Add delays to make results readable
+  nRFdisplay.showStaticTestFeedback(1000);
 
   // Test connections, display feedback
   if (spi2.isChipConnected() == 1 && spi1.isChipConnected() == 1) 
@@ -179,6 +178,3 @@ extern void nRFtest(void)
 
   nRFdisplay.testingComplete = true;
 } 
-
-
-#endif

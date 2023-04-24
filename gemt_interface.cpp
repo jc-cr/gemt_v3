@@ -1,3 +1,4 @@
+#include "Arduino.h"
 #include "gemt_interface.h"
 
 // Flag: Set to true when display booted up from a menu object
@@ -148,20 +149,20 @@ void onEb1Clicked(EncoderButton& eb)
 // GEMT Base Implementations (Defaults)
 //========================================================================
 
-void GEMTbase::displayPrep(void)
+void GEMTbase::displayPrep(void) const
 {
     display.clearDisplay();
     display.setCursor(0, 0);
     display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
 }
 
-void GEMTbase::resetClicked(void)
+void GEMTbase::resetClicked(void) const
 {
   clicked = 0;
 }
 
 
-void GEMTbase::setFirstLine(String title)
+void GEMTbase::setFirstLine(String title) const
 {
   _firstLine = title;
 }
@@ -172,7 +173,7 @@ void GEMTbase::resetMembers(void)
 
 }
 
-void GEMTbase::setTurnBounds(int lower, int upper)
+void GEMTbase::setTurnBounds(int lower, int upper) const
 {
   if (ebLowerBound != lower)
   {
@@ -189,7 +190,7 @@ void GEMTbase::setTurnBounds(int lower, int upper)
 // GEMT Menu Implementations
 //========================================================================
 
-void GEMTmenu::bootUp(void)
+void GEMTmenu::bootUp(void) const
 {
   // Do nothing
   if(hasBeenBootedUp == true)
@@ -373,7 +374,7 @@ void GEMTtest::setStaticTestFeedbackLine(String msg)
   ++_currIndex;
 }
 
-void GEMTtest::showStaticTestFeedback(bool finalMessage)
+void GEMTtest::showStaticTestFeedback(int displayDuration)
 {
   eb1.update();
   displayPrep();
@@ -391,14 +392,23 @@ void GEMTtest::showStaticTestFeedback(bool finalMessage)
 
 
   display.display();
-  // We dont want to reset clicked in this case, that ways it carries over to showStaticTestScreen
+ 
 
-  // Reset if not final message
-  if(!finalMessage)
+  // Display for specified duration, will exit if clicked
+  // Also if clicked, we won't reset in order to carry state over to next function
+  unsigned long startTime = millis();
+  while (!clicked || displayDuration > 0)
   {
-    _resetMembers();
+    eb1.update();
+    unsigned long elapsedTime = millis() - startTime;
+
+    if (elapsedTime >= displayDuration)
+    {
+      break;
+    }
   }
-  
+
+  _resetMembers();
 }
 
 void GEMTtest::showStaticTestScreen(funcPtr moduleTest)

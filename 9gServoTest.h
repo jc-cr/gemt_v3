@@ -1,5 +1,5 @@
-#ifndef servotest
-#define servotest
+#pragma once
+
 
 #include <Servo.h>
 #include "gemt_interface.h"
@@ -67,8 +67,7 @@ extern void autoServoTest(void)
 
   servoDisplay.setStaticTestFeedbackLine("Servo will now rotate");
   servoDisplay.setStaticTestFeedbackLine("to 180 degrees in 45 degree increments");
-  servoDisplay.showStaticTestFeedback(0);
-  delay(2000);
+  servoDisplay.showStaticTestFeedback(2000);
   
   for (int i = 0; i <= 4; ++i)
   {
@@ -76,8 +75,7 @@ extern void autoServoTest(void)
     String msg = String("Angle: ") + String(angle);
     servo.write(angle);
     servoDisplay.setStaticTestFeedbackLine(msg);
-    servoDisplay.showStaticTestFeedback(0);
-    delay(2000); // Extra delay to allow servo to reach pos
+    servoDisplay.showStaticTestFeedback(2000);
   }
   for (int i = 0; i <= 4; ++i)
   {
@@ -85,14 +83,11 @@ extern void autoServoTest(void)
     String msg = String("Angle: ") + String(angle);
     servo.write(angle);
     servoDisplay.setStaticTestFeedbackLine(msg);
-    servoDisplay.showStaticTestFeedback(0);
-    delay(2000); // Extra delay to allow servo to reach pos 
+    servoDisplay.showStaticTestFeedback(2000);
   }
 
   String msg = String("Angle: ") + String("0");
   servoDisplay.setStaticTestFeedbackLine(msg);
-  servoDisplay.showStaticTestFeedback(1);
+  servoDisplay.showStaticTestFeedback(60000); // Show screen for like a minute. User should exit before. If they dont then screen go blank
   servoDisplay.testingComplete = true;
 }
-
-#endif

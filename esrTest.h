@@ -1,5 +1,5 @@
-#ifndef esrtest
-#define esrtest
+#pragma once
+
 
 #include "gemt_interface.h"
 
@@ -73,9 +73,9 @@ extern void esrTest(void)
     esrVal = esrVal * 1000; //esrval in mOhms
     
     String msg = String("ESR: ") + String(esrVal,2) + String(" mOhms");
-    Serial.println(esrVal);
+
     esrDisplay.setStaticTestFeedbackLine(msg);
-    esrDisplay.showStaticTestFeedback(0);
+    esrDisplay.showStaticTestFeedback(3000);
   }
 }
 
@@ -126,4 +126,3 @@ long readVcc(void) {
   return result; // Vcc in millivolts
 }
 
-#endif

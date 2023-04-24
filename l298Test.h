@@ -1,5 +1,5 @@
-#ifndef motortest
-#define motortest
+#pragma once
+
 
 #include "gemt_interface.h"
 
@@ -70,8 +70,8 @@ extern void l298Test(void)
     
     l298Display.setStaticTestFeedbackLine(l1);
     l298Display.setStaticTestFeedbackLine(l2);
-    l298Display.showStaticTestFeedback(0);
-    delay(2000);
+    l298Display.showStaticTestFeedback(2000);
+
     x=x+1;
     break;
   case 2:
@@ -88,8 +88,8 @@ extern void l298Test(void)
     
     l298Display.setStaticTestFeedbackLine(l1);
     l298Display.setStaticTestFeedbackLine(l2);
-    l298Display.showStaticTestFeedback(0);
-    delay(2000);
+    l298Display.showStaticTestFeedback(2000);
+
     x=x+1;
     break;
    case 3:
@@ -105,8 +105,8 @@ extern void l298Test(void)
     
     l298Display.setStaticTestFeedbackLine(l1);
     l298Display.setStaticTestFeedbackLine(l2);
-    l298Display.showStaticTestFeedback(0);
-    delay(2000);
+    l298Display.showStaticTestFeedback(2000);
+
     x=x+1;
     break;
    case 4:
@@ -122,8 +122,8 @@ extern void l298Test(void)
     
     l298Display.setStaticTestFeedbackLine(l1);
     l298Display.setStaticTestFeedbackLine(l2);
-    l298Display.showStaticTestFeedback(0);
-    delay(2000);
+    l298Display.showStaticTestFeedback(2000);
+
     x=5;
     break;
     }
@@ -161,5 +161,3 @@ void VoltR()
   digitalWrite(L8IN1, LOW);
   digitalWrite(L8IN2, LOW);
 }
-
-#endif
