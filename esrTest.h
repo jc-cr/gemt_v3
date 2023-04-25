@@ -1,12 +1,13 @@
 #pragma once
+#include "Arduino.h"
 
 #include "gemt_interface.h"
 
 GEMTtest esrDisplay;
 
 const unsigned short int  DISCHARGE_PIN       = 41;
-const unsigned short int  ESR_PIN             = A0;
-const unsigned short int  PULSE_PIN           = 39;
+#define ESR_PIN A0
+#define PULSE_PIN 39
 
 extern void esrTest(void);
 unsigned long measureESR(void);
@@ -29,8 +30,16 @@ void runESRtest(void)
   }
 }
 
+
+bool firstLoop = true;
 extern void esrTest(void)
 {
+  if (firstLoop) {
+    esrDisplay.setStaticTestFeedbackLine("Test starting...");
+    esrDisplay.showStaticTestFeedback(1000);
+    firstLoop = false;
+  }
+
   #define FASTADC 1
   // defines for setting and clearing register bits
   #ifndef cbi
@@ -39,7 +48,7 @@ extern void esrTest(void)
   #ifndef sbi
   #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
   #endif
-  double        vRef        = 1.069;//voltage on the Aref pin 
+  double        vRef        = 1.1;//voltage on the Aref pin 
   double        current     = 0.088564;
   unsigned long esrSamples;
   double        miliVolt;
@@ -51,9 +60,10 @@ extern void esrTest(void)
   pinMode(DISCHARGE_PIN, OUTPUT);
   
   Vcc = readVcc(); //sets Vcc to well defined and measured arduino power rail voltage
-  analogReference(INTERNAL1V1);//setting vRef to internal reference 1.1V
+  
   digitalWrite(PULSE_PIN,HIGH);//low enables T1
   digitalWrite(PULSE_PIN,HIGH);//low disables T2
+  
   if (FASTADC) 
   {
     sbi(ADCSRA,ADPS2);
@@ -62,7 +72,7 @@ extern void esrTest(void)
   }
 
   esrSamples = measureESR();//this function takes a while,)
-  miliVolt = (esrSamples * vRef) / 65.535;//calculating voltage on AIN0 pin
+  miliVolt = (esrSamples * vRef) / 1023.0;//calculating voltage on AIN0 pin
   esrVal = 100 / ((Vcc/miliVolt)-1); //esr value in ohms
   esrVal = esrVal * 1000; //esrval in mOhms
   
@@ -77,16 +87,16 @@ unsigned long measureESR(void)
   unsigned long samples     = 0;
   unsigned int  acumulator  = 0;
   int           i           = 0;
-  //oversampling 4096 times (for 16 bit is 4^(desiredResolution - ADCresolution))
-  while(i < 4096) {
+  //oversampling 8192 times (for 16 bit is 4^(desiredResolution - ADCresolution))
+  while(i < 8192) {
     digitalWrite(DISCHARGE_PIN,HIGH);//discharge caps
-    delayMicroseconds(600);
+    delayMicroseconds(1000); // increased delay after discharge
     digitalWrite(DISCHARGE_PIN,LOW); //disable discharging
     digitalWrite(PULSE_PIN,LOW);//making a miliVolt pulse of 50mA
-    delayMicroseconds(5);//on the scope it looks that after enabling the pulse a litle delay is
-    //recomended so the oscillations fade away
-    acumulator = analogRead(ESR_PIN);//reading value on AIN0
+    delayMicroseconds(10); // increased delay after pulse
     digitalWrite(PULSE_PIN,HIGH);//stopping pulse
+    delayMicroseconds(100);
+    acumulator = analogRead(ESR_PIN);//reading value on AIN0
     samples += acumulator;//acumulating the readings
     i++;
   }
@@ -95,7 +105,8 @@ unsigned long measureESR(void)
 }
 
 //function designed to find the true Vcc power rail voltage, used for ESR calculations
-long readVcc(void) {
+long readVcc(void) 
+{
   // Read 1.1V reference against AVcc
   // set the reference to Vcc and the measurement to the internal 1.1V reference
   #if defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
@@ -106,7 +117,7 @@ long readVcc(void) {
     ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);
   #endif  
  
-  delay(2); // Wait for Vref to settle
+  delay(20); // Wait for Vref to settle
   ADCSRA |= _BV(ADSC); // Start conversion
   while (bit_is_set(ADCSRA,ADSC)); // measuring
  
