@@ -130,7 +130,6 @@ void onEb1Encoder(EncoderButton& eb)
   }
 
   ebState = abs(eb.position());
-  Serial.println(ebState);
   
 }
 

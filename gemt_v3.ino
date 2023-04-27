@@ -34,7 +34,6 @@ void setup(void)
   ServoMenu.addItem("Back", goToMainMenu);
 
   MainMenu.bootUp();
-  Serial.begin(115200); // DEBUGGING
 }
 
 int main(void) 
