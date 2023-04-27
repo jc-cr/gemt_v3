@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include "gemt_interface.h"
 #include <HCSR04.h>
 
@@ -9,7 +10,7 @@ const unsigned short int  echoPin = 28;
 UltraSonicDistanceSensor distanceSensor(triggerPin, echoPin);
 GEMTtest ultrasonicDisplay;
 
-void ultrasonicTest(void);
+extern void ultrasonicTest(void);
 
 void runUltrasonicTest(void)
 {
@@ -27,7 +28,7 @@ void runUltrasonicTest(void)
 }
 
 float distance = 0;
-void ultrasonicTest(void)
+extern void ultrasonicTest(void)
 {
   // Calculating the distance
   distance = distanceSensor.measureDistanceCm();

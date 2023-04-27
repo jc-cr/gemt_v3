@@ -9,8 +9,8 @@ Servo servo;
 
 const unsigned short int  servoPWMPin = 7;
 
-void manualServoTest(void);
-void autoServoTest(void);
+extern void manualServoTest(void);
+extern void autoServoTest(void);
 
 void runServoManualTest(void)
 {  
