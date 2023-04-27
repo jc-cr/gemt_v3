@@ -1,9 +1,8 @@
 <p align="center">
   <img src="logo.png" style="object-fit: cover; width: 100%; height: 300px;" />
-  <h1 style="position: absolute; top: 150px; left: 50%; transform: translateX(-50%); color: white; text-shadow: 2px 2px 2px black;">FindMe</h1>
+  <h1 style="position: absolute; top: 150px; left: 50%; transform: translateX(-50%); color: white; text-shadow: 2px 2px 2px black;">General Electronic Module Tester (GEMT)</h1>
 </p>
 
-# General Electronic Module Tester (GEMT)
 [V3]
 OOP focused adapation of GEMT V2
 
