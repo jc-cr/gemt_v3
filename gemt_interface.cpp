@@ -1,3 +1,4 @@
+#include "HardwareSerial.h"
 #include "Arduino.h"
 #include "gemt_interface.h"
 
@@ -122,14 +123,14 @@ extern void updateMenu(GEMTmenu& NextMenu)
 void onEb1Encoder(EncoderButton& eb)
 {
   // Reset if encoder goes past active Menu limit
-  if (eb.position() <= ebLowerBound || abs(eb.position()) >= ebUpperBound)
+  if (eb.position() <= ebLowerBound || eb.position() >= ebUpperBound)
   {
     eb.resetPosition(0);
+    ebState = 0;
   }
 
   ebState = abs(eb.position());
   Serial.println(ebState);
-  
 }
 
 void onEb1Clicked(EncoderButton& eb)
@@ -146,14 +147,14 @@ void onEb1Clicked(EncoderButton& eb)
 // GEMT Base Implementations (Defaults)
 //========================================================================
 
-void GEMTbase::displayPrep(void) const
+void GEMTbase::displayPrep(void)
 {
     display.clearDisplay();
     display.setCursor(0, 0);
     display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
 }
 
-void GEMTbase::resetClicked(void) const
+void GEMTbase::resetClicked(void)
 {
   clicked = 0;
 }
@@ -187,7 +188,7 @@ void GEMTbase::setTurnBounds(int lower, int upper)
 // GEMT Menu Implementations
 //========================================================================
 
-void GEMTmenu::bootUp(void) const
+void GEMTmenu::bootUp(void)
 {
   // Do nothing
   if(hasBeenBootedUp == true)

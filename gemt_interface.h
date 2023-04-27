@@ -45,10 +45,10 @@ class GEMTbase
     virtual ~GEMTbase(){};
 
     // Helper: Function to quickly call actions required to prep screen for printing
-    void displayPrep(void) const;
+    void displayPrep(void);
 
     // Helper: Create function for clarity in resetting clicked
-    void resetClicked(void) const;
+    void resetClicked(void);
 
     // Desc: Used to reset index and memebers after test
     virtual void resetMembers(void);
@@ -79,7 +79,7 @@ class GEMTmenu : public GEMTbase
 
     // Only need to execute once.
     // Defines boot up actions: Check hardware, set interupt handlers, show logo
-    void bootUp(void) const;
+    void bootUp(void);
 
     // Set line items of menu. Must be at least len of  instatiated value
     void addItem(String itemName, funcPtr selectionFunction);
