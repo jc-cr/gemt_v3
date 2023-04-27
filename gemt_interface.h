@@ -57,7 +57,7 @@ class GEMTbase
     void setFirstLine(String title);
 
     // Desc: Used to set current screens turn bounderies
-    void setTurnBounds(int lower, int upper) const;
+    void setTurnBounds(int lower, int upper);
 
   protected:
     // Protected default constructor since we dont create an instance of base class
@@ -145,5 +145,3 @@ extern void updateMenu(GEMTmenu& NextMenu);
 // Encoder handler functions
 extern void onEb1Encoder(EncoderButton& eb);
 extern void onEb1Clicked(EncoderButton& eb);
-
-

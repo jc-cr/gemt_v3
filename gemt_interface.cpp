@@ -122,8 +122,6 @@ extern void updateMenu(GEMTmenu& NextMenu)
 void onEb1Encoder(EncoderButton& eb)
 {
   // Reset if encoder goes past active Menu limit
-  // BUG: Could cause issues to test functions if a menu only has one item
-  // TODO: Setup a global var to track rotation limit that is set whenever a certain test is intiilized...
   if (eb.position() <= ebLowerBound || abs(eb.position()) >= ebUpperBound)
   {
     eb.resetPosition(0);
@@ -136,7 +134,6 @@ void onEb1Encoder(EncoderButton& eb)
 void onEb1Clicked(EncoderButton& eb)
 {
   // Set selection value to current state
-  Serial.println("Clicked");
   clicked = true;
   clickedItemNumber = ebState; // In case user turns while
   
@@ -172,7 +169,7 @@ void GEMTbase::resetMembers(void)
 
 }
 
-void GEMTbase::setTurnBounds(int lower, int upper) const
+void GEMTbase::setTurnBounds(int lower, int upper)
 {
   if (ebLowerBound != lower)
   {
@@ -390,22 +387,14 @@ void GEMTtest::showStaticTestFeedback(int displayDuration)
   display.setCursor(0, 56);
   display.print("Done");
 
-
   display.display();
  
   // Display for specified duration, will exit if clicked
   // Also if clicked, we won't reset in order to carry state over to next function
-  unsigned long startTime = millis();
-  while (!clicked && displayDuration > 0)
+  unsigned long endTime = millis() + displayDuration;
+  while (!clicked && millis() < endTime)
   {
     eb1.update();
-    display.display();
-    unsigned long elapsedTime = millis() - startTime;
-  
-    if (elapsedTime >= displayDuration)
-    {
-      break;
-    }
   }
 
   _resetMembers();
