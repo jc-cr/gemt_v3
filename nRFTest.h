@@ -6,7 +6,7 @@
 
 GEMTtest nRFdisplay;
 
-void nRFtest(void);
+extern void nRFtest(void);
 
 // Driver for testing protocol
 void runNRFtest(void)
@@ -25,7 +25,7 @@ void runNRFtest(void)
 }
 
 // This is actual testing function
-void nRFtest(void)
+extern void nRFtest(void)
 {
   bool result = false;
   
