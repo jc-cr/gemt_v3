@@ -36,13 +36,13 @@ void runESRtest(void)
   if (esrDisplay.showInfoScreen())
   {
     esrDisplay.setFirstLine("ESR Test: ");
-    //esrTest();
     esrDisplay.showStaticTestScreen(esrTest);
   }
 }
 
 void esrTest(void)
 {
+  Serial.begin(115200); // DEBUGGING
   esrDisplay.setStaticTestFeedbackLine("Test starting.");
   esrDisplay.setStaticTestFeedbackLine("Sit back, relax,");
   esrDisplay.setStaticTestFeedbackLine("This'll take ~1 min");
@@ -51,7 +51,7 @@ void esrTest(void)
   pinMode(ESR_PIN, INPUT);//reading miliVolt
   pinMode(PULSE_PIN, OUTPUT);
   pinMode(DISCHARGE_PIN, OUTPUT);
-  Serial.begin(115200); // DEBUGGING
+
 
   
   double esrVal = 0.00;

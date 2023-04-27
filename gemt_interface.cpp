@@ -118,21 +118,26 @@ extern void updateMenu(GEMTmenu& NextMenu)
 // Encoder Handlers (Interrupt functions)
 //========================================================================
 
-// On click, the global selection variable gets updated with
-// value of where it was selcted
 void onEb1Encoder(EncoderButton& eb)
 {
-  // Reset if encoder goes past active Menu limit
-  if (eb.position() <= ebLowerBound || eb.position() >= ebUpperBound)
+  ebState = -1 * (eb.position());
+
+  if (ebState < ebLowerBound)
+  {
+    eb.resetPosition(0);
+    ebState = 0;
+
+  }
+
+  else if (ebState >= ebUpperBound)
   {
     eb.resetPosition(0);
     ebState = 0;
   }
-
-  ebState = abs(eb.position());
-  Serial.println(ebState);
 }
 
+// On click, the global selection variable gets updated with
+// value of where it was selcted
 void onEb1Clicked(EncoderButton& eb)
 {
   // Set selection value to current state
@@ -209,8 +214,6 @@ void GEMTmenu::bootUp(void)
     // Set encode Handlers
     eb1.setEncoderHandler(onEb1Encoder);
     eb1.setClickHandler(onEb1Clicked);
-    
-    //attachInterrupt(digitalPinToInterrupt(19), onEb1Clicked, RISING);
 
     // Display logo for 2 sec
     display.clearDisplay();
@@ -240,11 +243,6 @@ void GEMTmenu::run(void)
     resetClicked(); // Reset before proceeding to function
 
     (*_selectionActions[clickedItemNumber])();
-  
-    // This works:
-    // selectionActions[0] = &dummyTest; Refrencing mem address of func
-    //(*selectionActions[0])(); Deref pointer to execute function
-    // ==  dummyTest()
   }
   
   //Display the previous Menu state

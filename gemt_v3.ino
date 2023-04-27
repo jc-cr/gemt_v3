@@ -16,6 +16,7 @@ void goToServoMenu(void)
 void goToMainMenu(void)
 {
   updateMenu(MainMenu);
+   
 }
 
 void setup(void)
@@ -34,7 +35,6 @@ void setup(void)
   ServoMenu.addItem("Back", goToMainMenu);
 
   MainMenu.bootUp();
-
 }
 
 int main(void) 
