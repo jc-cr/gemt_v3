@@ -20,8 +20,6 @@ void goToMainMenu(void)
 
 void setup(void)
 {
-  //DEBUG 
-  Serial.begin(115200);
   // Add items to your menus here:
   MainMenu.setFirstLine("GEMT Main Menu: ");
   MainMenu.addItem("ESR Test", runESRtest);
