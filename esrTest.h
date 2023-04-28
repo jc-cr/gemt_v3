@@ -28,8 +28,8 @@ void esrTest(void);
 void runESRtest(void)
 {
   esrDisplay.setFirstLine("ESR Test Info: ");
-  esrDisplay.setInfoMsgLine("J1 -> Blue");
-  esrDisplay.setInfoMsgLine("J2 -> GND");
+  esrDisplay.setInfoMsgLine("J1 -> Anode");
+  esrDisplay.setInfoMsgLine("J2 -> Cathode");
 
   // If user chooses to proceed, run test
   // Otherwise we just exit test and return to previous menu
