@@ -6,26 +6,52 @@
 [V3]
 OOP focused adapation of GEMT V2
 
-## To Do:
-  - [X] Test a Main menu
-  - [X] Test selection actions
-  - [X] Setup a submenu
-  - [X] Setup nRF test example
-  - [X] Port over all tests programs
+# Installation
+
+This section provides a step-by-step guide for installing the General Electronic Module Tester (GEMT) library on your Arduino Mega development environment.
+
+## Prerequisites
+
+Before you install the GEMT library, make sure you have the following installed:
+
+- Arduino IDE or compatible development environment
+- Arduino Mega board
+
+## Step 1: Download the Library
+
+Download the GEMT library from the repository or release page as a ZIP file.
+
+## Step 2: Import the Library
+
+Open your Arduino IDE or compatible development environment, and follow these steps:
+
+1. Click on **Sketch** in the top menu.
+2. Hover over **Include Library** and click on **Add .ZIP Library...**.
+3. Locate the downloaded ZIP file and click **Open**.
+
+The GEMT library is now imported into your Arduino development environment.
+
+## Step 3: Verify the Installation
+
+To verify the installation, follow these steps:
+
+1. Click on **File** in the top menu.
+2. Hover over **Examples** and navigate to **GEMT** in the list of libraries.
+3. Select one of the example sketches provided with the library.
+
+The example sketch should open in a new window. Upload the sketch to your Arduino Mega board and observe the results to ensure the library is installed correctly.
 
 
-
-## How to Create Your Own Testing Menu
+# How to Create Your Own Testing Menu
 
 The GEMT library allows you to easily create your own testing menu for IOT and robotic electronics using the Arduino framework. This section provides a step-by-step guide for creating your own testing menu.
 
 Your file structure should end up like this:
 ```
-├── gemt_interface.cpp
-├── gemt_interface.h
 ├── main.ino
 ├── test1.h
-└── test2.h
+├── test2.h
+└── ...
 ```
 
 ### Step 1: Define Your Test Functions
@@ -115,8 +141,11 @@ void loop()
 }
 ```
 
-## Issues
+# Issues
 See issues section for current issues being resolved
 
-## Dev Notes
-  - Don't use "display" outside of scope. Will crash
+
+# License
+
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+
