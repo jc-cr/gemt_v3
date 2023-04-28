@@ -1,0 +1,39 @@
+Acknowledgments
+===============
+
+This project uses the following third-party libraries:
+
+- Servo: Arduino library for controlling servo motors
+  - Author: Arduino
+  - License: LGPL-2.1
+  - Repository: https://github.com/arduino-libraries/Servo
+
+- Wire: Arduino library for communication over I2C
+  - Author: Arduino
+  - License: LGPL-2.1
+  - Repository: https://github.com/arduino/ArduinoCore-avr/tree/master/libraries/Wire
+
+- Adafruit_GFX: Adafruit graphics library for display devices
+  - Author: Adafruit Industries
+  - License: BSD-3-Clause
+  - Repository: https://github.com/adafruit/Adafruit-GFX-Library
+
+- Adafruit_SSD1306: Adafruit library for SSD1306 OLED displays
+  - Author: Adafruit Industries
+  - License: BSD-3-Clause
+  - Repository: https://github.com/adafruit/Adafruit_SSD1306
+
+- EncoderButton: Arduino library for handling rotary encoder button input
+  - Author: Stutchbury
+  - License: MIT
+  - Repository: https://github.com/Stutchbury/EncoderButton
+
+- RF24: Arduino library for nRF24L01(+) 2.4GHz Wireless Transceiver
+  - Author: TMRh20
+  - License: GPL-3.0
+  - Repository: https://github.com/nRF24/RF24
+
+- HCSR04: Arduino library for HC-SR04 ultrasonic distance sensor
+  - Author: Martyn Currey
+  - License: MIT
+  - Repository: https://github.com/Martinsos/arduino-lib-hc-sr04

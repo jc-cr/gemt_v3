@@ -1,18 +1,65 @@
+
 <p align="center">
   <img src="logo.png" style="object-fit: cover; width: 100%; height: 300px;" />
   <h1 style="position: absolute; top: 150px; left: 50%; transform: translateX(-50%); color: white; text-shadow: 2px 2px 2px black;">General Electronic Module Tester (GEMT)</h1>
 </p>
 
-[V3]
-OOP focused adapation of GEMT V2
+# Table of Contents
+
+- [Project Overview](#Project-Overview)
+    - [Description](##Description)
+    - [Revision Changes](##Revision-Changes)
+    - [Authors and Repository](##Authors-and-Repository)
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Download the Library](#step-1-download-the-library)
+  - [Step 2: Import the Library](#step-2-import-the-library)
+  - [Step 3: Verify the Installation](#step-3-verify-the-installation)
+- [How to Create Your Own Testing Menu](#how-to-create-your-own-testing-menu)
+  - [Step 1: Define Your Test Functions](#step-1-define-your-test-functions)
+  - [Step 2: Define Your Menus](#step-2-define-your-menus)
+  - [Step 3: Boot Up Your Menu](#step-3-boot-up-your-menu)
+  - [Step 4: Start Your Menu](#step-4-start-your-menu)
+- [Issues](#issues)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
+# Project Overview
+
+## Description
+
+The GEMT library allows you to easily create your own testing menus and protocols for IoT and robotic electronic modules. With this library, you can design custom testing procedures, automate tests, and efficiently analyze the performance of your electronic components.
+
+The repository currently contains the custom interfacing library [`gemt_interface.cpp`](./gemt_interface.cpp), [`gemt_interface.h`](gemt_interface.h) as well as example testing programs to demonstrate the project's intended use. 
+
+
+## Revision Changes
+V3 is an OOP focused adaptation of GEMT V2.
+
+## Authors and Repository
+
+This library was developed by Team GEMT for our Senior Design project at UTSA.
+
+For the latest version, documentation, and issue tracking, please visit the library's GitHub repository:
+
+[GEMT Repository](https://github.com/jc-cr/gemt_v3)
+
+## Repository Contents and Future Plans
+
+Our future plans include:
+
+1. Separating the individual components for better modularity and maintainability.
+2. Packaging the library for open-source distribution as an Arduino library, making it even more accessible and convenient for users.
+
 
 # Installation
 
 This section provides a step-by-step guide for installing the General Electronic Module Tester (GEMT) library on your Arduino Mega development environment.
 
+
 ## Prerequisites
 
-Before you install the GEMT library, make sure you have the following installed:
+Before you install the GEMT library, make sure you have the following:
 
 - Arduino IDE or compatible development environment
 - Arduino Mega board
@@ -142,10 +189,12 @@ void loop()
 ```
 
 # Issues
-See issues section for current issues being resolved
-
+See issues section for current issues being resolved.
 
 # License
 
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
 
+# Acknowledgments
+
+This project uses several third-party libraries. The complete list of libraries, their authors, and respective licenses can be found in the [NOTICE](./NOTICE) file.
