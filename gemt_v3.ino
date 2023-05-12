@@ -4,8 +4,9 @@
 #include "ultrasonicTest.h"
 #include "esrTest.h"
 #include "l298Test.h"
+#include "mpu6050Test.h"
 
-GEMTmenu MainMenu(5);
+GEMTmenu MainMenu(6);
 GEMTmenu ServoMenu(3);
 
 // TODO: Implement these 2 functions better
@@ -28,6 +29,7 @@ void setup(void)
   MainMenu.addItem("nRF Test", runNRFtest);
   MainMenu.addItem("L298N Test", runl298Test);
   MainMenu.addItem("Ultrasonic Test", runUltrasonicTest);
+  MainMenu.addItem("MPU6050 Test", runMPUtest);
   
   ServoMenu.setFirstLine("9G Servo Submenu: ");
   ServoMenu.addItem("Manual Servo Test", runServoManualTest);
